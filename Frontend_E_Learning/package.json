@@ -27,8 +27,10 @@
     "react-slick": "^0.30.2",
     "react-tabs": "^6.0.2",
     "react-tilty": "^3.0.0",
+    "react-toastify": "^10.0.5",
     "react-visibility-sensor": "^5.1.1",
     "sass": "^1.77.0",
+    "universal-cookie": "^7.1.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

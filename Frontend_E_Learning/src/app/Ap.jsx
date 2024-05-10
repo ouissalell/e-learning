@@ -55,13 +55,16 @@ import ContactTwo from '../pages/contact-2';
 import ContactThree from '../pages/contact-3';
 import ContactFour from '../pages/contact-4';
 import Error from '../pages/404';
-import LoadTop from '../components/Common/ScrollTop/LoadTop'
+import LoadTop from '../components/Common/ScrollTop/LoadTop';
+import CreateEns from '../pages/admin/createEns'
+import { AuthContextProvider } from '../context/authContext';
 
 const App = () => {
     return (
         <div className='App'>
            
            <Router>
+           <AuthContextProvider>
             <LoadTop/>
         <Routes>
                 <Route exact path="/"  element={<Home/>} />
@@ -118,7 +121,9 @@ const App = () => {
                     <Route path="/contact-3" element={<ContactThree/>} />
                     <Route path="/contact-4" element={<ContactFour/>} />
                     <Route element={<Error/>} />
+                    <Route path="/admin/createns" element={<CreateEns/>} />
                 </Routes>
+                </AuthContextProvider>
                 </Router>
         </div>
     );
