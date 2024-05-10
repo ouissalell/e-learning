@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate } from 'react-router-dom';
+import axios from "axios";
 import Header from '../components/Layout/Header/Header';
 import Footer from '../components/Layout/Footer/Footer';
 import Newsletter from '../components/Common/Newsletter';
@@ -17,6 +18,41 @@ import footerLogo from '../assets/img/logo/lite-logo.png';
 import bannerbg from '../assets/img/breadcrumbs/inner7.jpg';
 
 const Login = () => {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+
+    const { email, password } = formData;
+
+    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    const login = async e => {
+        e.preventDefault();
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+    
+            const body = JSON.stringify({ email, password });
+    
+            const res = await axios.post('http://localhost:8800/api/auth/login', body, config);
+            
+            // Enregistrement du token JWT dans un cookie avec une durée de vie de 1 heure
+            localStorage.setItem('access_token', res.data.token);
+    
+            // Rediriger l'utilisateur vers la page d'accueil après la connexion réussie
+            navigate("/");
+    
+            console.log(res.data); // Log the response data
+    
+        } catch (err) {
+            console.error(err.response.data);
+        }
+    };
 
     return (
         <React.Fragment>
@@ -54,10 +90,24 @@ const Login = () => {
                         <div className="main-part">
                             <div className="method-account">
                                 <h2 className="login">Login</h2>
-                                <form>
-                                    <input type="email" name="E-mail" placeholder="E-mail" required />
-                                    <input type="text" name="text" placeholder="Password" required />
-                                    <button type="submit" className="readon submit-btn">login</button>
+                                <form onSubmit={login}>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        placeholder="E-mail"
+                                        value={email}
+                                        onChange={e => onChange(e)}
+                                        required
+                                    />
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={e => onChange(e)}
+                                        required
+                                    />
+                                    <button type="submit" className="readon submit-btn">Login</button>
                                     <div className="last-password">
                                         <p>Not registered? <Link to="/register">Create an account</Link></p>
                                     </div>

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import Header from '../components/Layout/Header/Header';
 import Footer from '../components/Layout/Footer/Footer';
 import Newsletter from '../components/Common/Newsletter';
@@ -17,6 +18,37 @@ import footerLogo from '../assets/img/logo/lite-logo.png';
 import bannerbg from '../assets/img/breadcrumbs/2.jpg';
 
 const Register = () => {
+    const [inputs, setInputs] = useState({
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "", 
+    });
+    const [err, setErr] = useState(null); // Utilisation de setErr pour définir les erreurs
+
+    const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            // Vérifier si les mots de passe correspondent
+            if (inputs.password !== inputs.confirmPassword) {
+                setErr("Passwords do not match.");
+                return;
+            }
+
+            const { confirmPassword, ...registerData } = inputs;
+        // Effectuer la soumission du formulaire
+        await axios.post("http://localhost:8800/api/auth/register", registerData);
+            navigate("/login");
+        } catch (err) {
+            setErr(err.response.data);
+        }
+    };
 
     return (
         <React.Fragment>
@@ -56,25 +88,20 @@ const Register = () => {
                         </div>
                         <div className="styled-form">
                             <div id="form-messages"></div>
-                            <form id="contact-form" method="post" action="#">
+                            <form id="contact-form" onSubmit={handleSubmit}>
                                 <div className="row clearfix">
                                     <div className="form-group col-lg-12 mb-25">
-                                        <input type="text" id="Name" name="First Name" value="" placeholder="First Name" required />
+                                        <input type="text" id="Name" name="username" value={inputs.username} placeholder="username" onChange={handleChange} required />
                                     </div>
                                     <div className="form-group col-lg-12">
-                                        <input type="text" id="last" name="lname" value="" placeholder="Last Name" required />
+                                        <input type="email" id="email" name="email" value={inputs.email} placeholder="Email address " onChange={handleChange} required />
+                                    </div>
+                                    
+                                    <div className="form-group col-lg-12">
+                                        <input type="text" id="puser" name="password" value={inputs.password} placeholder="Password" onChange={handleChange} required />
                                     </div>
                                     <div className="form-group col-lg-12">
-                                        <input type="email" id="email" name="email" value="" placeholder="Email address " required />
-                                    </div>
-                                    <div className="form-group col-lg-12">
-                                        <input type="text" id="user" name="phone_number" value="" placeholder="Username" required />
-                                    </div>
-                                    <div className="form-group col-lg-12">
-                                        <input type="text" id="puser" name="Password" value="" placeholder="Password" required />
-                                    </div>
-                                    <div className="form-group col-lg-12">
-                                        <input type="text" id="Confirm" name="Confirm Password" value="" placeholder="Confirm Password" required />
+                                        <input type="text" id="Confirm" name="confirmPassword" value={inputs.confirmPassword} placeholder="Confirm Password" onChange={handleChange} required />
                                     </div>
                                     <div className="form-group col-lg-12 col-md-12 col-sm-12">
                                         <div className="row clearfix">
@@ -100,9 +127,11 @@ const Register = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    
                                     <div className="form-group col-lg-12 col-md-12 col-sm-12 text-center">
-                                        <button type="submit" className="readon register-btn"><span className="txt">Sign Up</span></button>
+                                        <button type="submit"  className="readon register-btn"><span className="txt">Sign Up</span></button>
                                     </div>
+                                    {err && <p>{err}</p>}
                                     <div className="form-group col-lg-12 col-md-12 col-sm-12">
                                         <div className="users">Already have an account? <Link to="/login">Sign In</Link></div>
                                     </div>
