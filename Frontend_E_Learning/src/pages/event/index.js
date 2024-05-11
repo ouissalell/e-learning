@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Helmet } from 'react-helmet';
 import SingleEvent from '../../components/Events/SingleEvent';
 import Header from '../../components/Layout/Header/Header';
@@ -23,6 +24,20 @@ import eventImg3 from '../../assets/img/event/home12/3.jpg';
 import eventImg4 from '../../assets/img/event/home12/4.jpg';
 
 const Event = () => {
+    const [events, setEvents] = useState([]);
+
+    useEffect(() => {
+        fetchEvents();
+    }, []);
+
+    const fetchEvents = async () => {
+        try {
+            const response = await axios.get("http://localhost:8800/api/event/getAllEvents");
+            setEvents(response.data);
+        } catch (error) {
+            console.error("Erreur lors de la récupération des événements :", error);
+        }
+    };
 
     return (
         <React.Fragment>
@@ -56,72 +71,20 @@ const Event = () => {
             <div className="rs-event orange-style pt-100 pb-100 md-pt-80 md-pb-80">
                 <div className="container">
                     <div className="row">
-                        <div className="col-lg-4 col-md-6 mb-60">
+                    {events.map((event, index) => (
+                        
+                        <div key={index} className="col-lg-4 col-md-6 mb-60">
                             <SingleEvent
                                 eventClass='event-item'
-                                eventImg={eventImg1}
-                                eventLocation='New Margania'
-                                eventDate='July 24, 2021'
-                                eventCategory='Recipes'
-                                eventTitle="Spicy Quince And Cranberry Chutney"
-                                eventDesc='Bootcamp Events Description Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod...'
+                                eventImg={`http://localhost:8800/api/image/${event.image}`} // Assurez-vous que le nom de la propriété correspond à celle de votre objet événement
+                                eventLocation={event.ville} // Assurez-vous que le nom de la propriété correspond à celle de votre objet événement
+                                eventDate={event.datedebut} // Assurez-vous que le nom de la propriété correspond à celle de votre objet événement
+                                eventCategory={event.categorie} // Assurez-vous que le nom de la propriété correspond à celle de votre objet événement
+                                eventTitle={event.titre} // Assurez-vous que le nom de la propriété correspond à celle de votre objet événement
+                                eventDesc={event.description} // Assurez-vous que le nom de la propriété correspond à celle de votre objet événement
                             />
                         </div>
-                        <div className="col-lg-4 col-md-6 mb-60">
-                            <SingleEvent
-                                eventClass='event-item'
-                                eventImg={eventImg2}
-                                eventLocation='New Margania'
-                                eventDate='July 24, 2021'
-                                eventCategory='Recipes'
-                                eventTitle="Persim, Pomegran, And Massag Kale Salad"
-                                eventDesc='Bootcamp Events Description Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod...'
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6 mb-60">
-                            <SingleEvent
-                                eventClass='event-item'
-                                eventImg={eventImg3}
-                                eventLocation='New Margania'
-                                eventDate='July 24, 2021'
-                                eventCategory='Recipes'
-                                eventTitle="Essential Fall Fruits That Aren’t Apples"
-                                eventDesc='Bootcamp Events Description Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod...'
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6 md-mb-60">
-                            <SingleEvent
-                                eventClass='event-item'
-                                eventImg={eventImg4}
-                                eventLocation='New Margania'
-                                eventDate='July 24, 2021'
-                                eventCategory='Recipes'
-                                eventTitle="Seekers From Overcoming Failure"
-                                eventDesc='Bootcamp Events Description Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod...'
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6 sm-mb-60">
-                            <SingleEvent
-                                eventClass='event-item'
-                                eventImg={eventImg1}
-                                eventLocation='New Margania'
-                                eventDate='July 24, 2021'
-                                eventCategory='Recipes'
-                                eventTitle="Best Technology Graduation Ceremony."
-                                eventDesc='Bootcamp Events Description Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod...'
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6">
-                            <SingleEvent
-                                eventClass='event-item'
-                                eventImg={eventImg2}
-                                eventLocation='New Margania'
-                                eventDate='July 24, 2021'
-                                eventCategory='Recipes'
-                                eventTitle="Educational Technology and Mobile Learning"
-                                eventDesc='Bootcamp Events Description Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod...'
-                            />
-                        </div>
+                    ))}
                     </div>
                 </div>
             </div>

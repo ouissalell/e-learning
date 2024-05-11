@@ -32,8 +32,9 @@ const MenuItems = (props) => {
                 <Link to="#">About</Link>
                 
             </li>
+            
             <li className={parentMenu === 'course' ? 'menu-item-has-children current-menu-item' : 'menu-item-has-children'}>
-            <Link to="#" as="#">Courses</Link>
+            <Link to="/course" as="#">Courses</Link>
                 {rol && (rol === 'admin' || rol === 'enseignant') && (
                     <ul className="sub-menu">
                         <li>
@@ -41,9 +42,6 @@ const MenuItems = (props) => {
                         </li>
                         <li>
                             <Link to="/course-2" className={location.pathname === "/course-2" ? "active-menu" : ""}>Update Courses</Link>
-                        </li>
-                        <li>
-                            <Link to="/course-3" className={location.pathname === "/course-3" ? "active-menu" : ""}>Courses</Link>
                         </li>
                         {rol === 'admin' && (
                             <>
@@ -61,7 +59,18 @@ const MenuItems = (props) => {
                 
             </li>
             <li className={parentMenu === 'pages' ? 'menu-item-has-children current-menu-item' : 'menu-item-has-children'}>
-                <Link to="#">Pages</Link>
+                <Link to="/event-3">Evenement</Link>
+                {rol && (rol === 'admin' || rol === 'enseignant') && (
+                    <ul className="sub-menu">
+                        <li>
+                            <Link to="/admin/createvt" className={location.pathname === "/course" ? "active-menu" : ""}>Add Evenement</Link>
+                        </li>
+                        <li>
+                            <Link to="/course-2" className={location.pathname === "/course-2" ? "active-menu" : ""}>Update Evenement</Link>
+                        </li>
+                        
+                    </ul>
+                )}
                 
             </li>
             <li className={parentMenu === 'blog' ? 'menu-item-has-children current-menu-item' : 'menu-item-has-children'}>

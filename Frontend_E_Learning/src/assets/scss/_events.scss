@@ -116,6 +116,8 @@
                 position: relative;
                 img{
                     border-radius: 5px 5px 0 0;
+                    height: 275.5px;
+    width: 375.5px;
                 }
             }
             .categorie{
@@ -154,7 +156,7 @@
 
                         color: #000000;
                         &:hover{
-                            color: $orangeColor;
+                            color: $orangeColor !important;
                         }
                     }
                 }
@@ -199,6 +201,7 @@
         }
         &:hover{
             transform: translateY(-10px);
+            
         }
         &.home12-style{
            .event-short{
@@ -398,6 +401,7 @@
                         z-index: 1;
                         transition: all .7s ease 0s;
                     }
+                    
 
                 }
                 .content-part{
@@ -463,6 +467,7 @@
                     &:hover {
                       width: 40px;
                       opacity: 1;
+                      
                     }
                 }
                 .slick-active button {

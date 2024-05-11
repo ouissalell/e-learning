@@ -1,8 +1,42 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React ,{useContext, useEffect, useState } from 'react';
+import { Link,useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { useAuth } from '../../../context/authContext'; 
 
 const TopHeader = (props) => {
 	const { topBarClass, emailAddress, phoneNumber, Location } = props;
+    const navigate = useNavigate();
+    const [nam,setName]=useState("");
+    const { name } = useAuth();
+    const fetchName = async () => {
+        try {
+          const userName = await name(); 
+          console.log("name de l'utilisateur:", userName);
+          setName(userName);
+        } catch (error) {
+          console.error("Erreur lors de la récupération du rôle:", error);
+        }
+      };
+    useEffect(() => {
+        
+    
+        fetchName();
+      }, []);
+      const handleLogout = async (e) => {
+        e.preventDefault();
+        try {
+          // Appel de l'API pour se déconnecter
+          const response = await axios.post('http://localhost:8800/api/auth/logout');
+          if (response.status === 200) {
+            localStorage.removeItem('access_token');
+            navigate("/");
+          } else {
+            console.error('Erreur lors de la déconnexion :', response.data);
+          }
+        } catch (error) {
+          console.error('Erreur lors de la déconnexion :', error);
+        }
+      };
 
     return (
         <div className={topBarClass ? topBarClass : "topbar-area home8-topbar hidden-md"}>
@@ -33,8 +67,8 @@ const TopHeader = (props) => {
                     <div className="col-md-5 text-end">
                         <ul className="topbar-right">
                             <li className="login-register">
-                                <i className="fa fa-sign-in"></i>
-                                <Link to="/login">Login</Link>/<Link to="/register">Register</Link>
+                                
+                                {nam ?<><button style={{border:"none" , background:"transparent"}} onClick={handleLogout}><i className="fa fa-sign-in" ></i></button>{nam}</>  : <><Link to="/login">Login</Link>/<Link to="/register">Register</Link></>}
                             </li>
                             <li className="btn-part">
                                 <Link to="/contact" className="apply-btn">Apply Now</Link>

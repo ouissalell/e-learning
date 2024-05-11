@@ -58,7 +58,7 @@ export const login = (req, res) => {
       return res.status(400).json("Wrong username or password!");
 
     // Générer le token JWT avec le rôle inclus
-    const token = jwt.sign({ id: userData.id, role: userData.role }, "jwtkey");
+    const token = jwt.sign({ id: userData.id, role: userData.role,name:userData.username }, "jwtkey");
 
     // Retirer le mot de passe de la réponse
     const { password, ...other } = userData;

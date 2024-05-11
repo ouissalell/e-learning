@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Helmet } from 'react-helmet';
 import SingleEventThree from '../../components/Events/SingleEventThree';
 import Header from '../../components/Layout/Header/Header';
@@ -25,6 +26,20 @@ import eventImg5 from '../../assets/img/event/style3/5.jpg';
 import eventImg6 from '../../assets/img/event/style3/6.jpg';
 
 const EventThree = () => {
+    const [events, setEvents] = useState([]);
+
+    useEffect(() => {
+        fetchEvents();
+    }, []);
+
+    const fetchEvents = async () => {
+        try {
+            const response = await axios.get("http://localhost:8800/api/event/getAllEvents");
+            setEvents(response.data);
+        } catch (error) {
+            console.error("Erreur lors de la récupération des événements :", error);
+        }
+    };
 
     return (
         <React.Fragment>
@@ -49,7 +64,7 @@ const EventThree = () => {
 
             {/* breadcrumb-area-start */}
             <SiteBreadcrumb
-                pageTitle="Event Three"
+                pageTitle="Event "
                 pageName="Event"
                 breadcrumbsImg={bannerbg}
             />
@@ -58,66 +73,18 @@ const EventThree = () => {
             <div className="rs-event modify2 orange-style pt-100 pb-100 md-pt-80 md-pb-80">
                 <div className="container">
                     <div className="row">
+                    {events.map((event, index) => (
                         <div className="col-lg-4 col-md-6 mb-30">
                             <SingleEventThree
                                 eventClass='event-item'
-                                eventImg={eventImg1}
-                                eventLocation='New Margania'
-                                eventDate='July 24, 2021'
-                                eventSchedule='11:00 AM - 03:00 AM'
-                                eventTitle="Spicy Quince And Cranberry Chutney"
+                                eventImg={`http://localhost:8800/api/image/${event.image}`}
+                                eventLocation={event.ville}
+                                eventDate={event.datedebut}
+                                eventSchedule={`${event.heuredebut} AM - ${event.heurefin} AM`} 
+                                eventTitle={event.titre}
                             />
                         </div>
-                        <div className="col-lg-4 col-md-6 mb-30">
-                            <SingleEventThree
-                                eventClass='event-item'
-                                eventImg={eventImg2}
-                                eventLocation='New Margania'
-                                eventDate='July 24, 2021'
-                                eventSchedule='11:00 AM - 03:00 AM'
-                                eventTitle="Persim, Pomegran, And Massag Kale Salad"
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6 mb-30">
-                            <SingleEventThree
-                                eventClass='event-item'
-                                eventImg={eventImg3}
-                                eventLocation='New Margania'
-                                eventDate='July 24, 2021'
-                                eventSchedule='11:00 AM - 03:00 AM'
-                                eventTitle="Essential Fall Fruits That Aren’t Apples"
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6 md-mb-30">
-                            <SingleEventThree
-                                eventClass='event-item'
-                                eventImg={eventImg4}
-                                eventLocation='New Margania'
-                                eventDate='July 24, 2021'
-                                eventSchedule='11:00 AM - 03:00 AM'
-                                eventTitle="Seekers From Overcoming Failure"
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6 sm-mb-30">
-                            <SingleEventThree
-                                eventClass='event-item'
-                                eventImg={eventImg5}
-                                eventLocation='New Margania'
-                                eventDate='July 24, 2021'
-                                eventSchedule='11:00 AM - 03:00 AM'
-                                eventTitle="Best Technology Graduation Ceremony."
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6">
-                            <SingleEventThree
-                                eventClass='event-item'
-                                eventImg={eventImg6}
-                                eventLocation='New Margania'
-                                eventDate='July 24, 2021'
-                                eventSchedule='11:00 AM - 03:00 AM'
-                                eventTitle="Educational Technology and Mobile Learning"
-                            />
-                        </div>
+                         ))}
                     </div>
                 </div>
             </div>
