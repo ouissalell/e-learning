@@ -58,6 +58,7 @@ import Error from '../pages/404';
 import LoadTop from '../components/Common/ScrollTop/LoadTop';
 import CreateEns from '../pages/admin/createEns'
 import { AuthContextProvider } from '../context/authContext';
+import CreateEvt from '../pages/admin/createEvt';
 
 const App = () => {
     return (
@@ -122,6 +123,7 @@ const App = () => {
                     <Route path="/contact-4" element={<ContactFour/>} />
                     <Route element={<Error/>} />
                     <Route path="/admin/createns" element={<CreateEns/>} />
+                    <Route path="/admin/createvt" element={<CreateEvt/>} />
                 </Routes>
                 </AuthContextProvider>
                 </Router>

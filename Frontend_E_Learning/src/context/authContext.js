@@ -37,8 +37,51 @@ export const AuthContextProvider = ({ children }) => {
     });
   };
 
+  const name = () => {
+    return new Promise((resolve, reject) => {
+      try {
+        const token = localStorage.getItem("access_token");
+        if (!token) {
+          throw new Error("No access token found");
+        }
+
+        const decodedToken = parseJwt(token);
+        const name = decodedToken.name;
+
+        resolve(name);
+        
+      } catch (error) {
+        console.error("Error fetching user role:", error);
+        reject(error);
+      }
+    });
+  }
+    
+  const idUser = () => {
+    return new Promise((resolve, reject) => {
+      try {
+        const token = localStorage.getItem("access_token");
+        if (!token) {
+          throw new Error("No access token found");
+        }
+
+        const decodedToken = parseJwt(token);
+        const idUser = decodedToken.id;
+
+        resolve(idUser);
+        
+      } catch (error) {
+        console.error("Error fetching user role:", error);
+        reject(error);
+      }
+    });
+
+    
+  };
+  
+
   return (
-    <AuthContext.Provider value={{ role }}>
+    <AuthContext.Provider value={{ role , idUser,name }}>
       {children}
     </AuthContext.Provider>
   );
