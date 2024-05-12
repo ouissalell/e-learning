@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import CourseSingleFour from '../../components/Courses/CourseSingleFour';
+import { useAuth } from '../../context/authContext'; 
 
 // Courses Image
 import image1 from '../../assets/img/courses/4.jpg';
@@ -10,78 +12,43 @@ import image5 from '../../assets/img/courses/8.jpg';
 import image6 from '../../assets/img/courses/9.jpg';
 
 const Courses = () => {
+    const { idUser } = useAuth();
+
+    const [courses, setCourses] = useState([]);
+
+    useEffect(() => {
+        fetchCourses();
+    }, []);
+
+    const fetchCourses = async () => {
+        const id_user = await idUser();
+        try {
+            const response = await axios.get(`http://localhost:8800/api/cours/getAllCoursesId/${id_user}`);
+            setCourses(response.data);
+        } catch (error) {
+            console.error("Erreur lors de la récupération des événements :", error);
+        }
+    };
 
     return (
         <React.Fragment>
             <div className="rs-popular-courses style3 orange-style pt-100 pb-100 md-pt-70 md-pb-80">
                 <div className="container">
                     <div className="row">
-                        <div className="col-lg-4 col-md-6 col-sm-6 mb-40">
+                    {courses.map((cours, index) => (
+                        <div  className="col-lg-4 col-md-6 col-sm-6 mb-40">
                             <CourseSingleFour
                                 courseClass="courses-item"
-                                courseImg={image1}
-                                courseCategory="Photography"
-                                courseTitle="The Art of Black and White Photography"
+                                courseImg={`http://localhost:8800/api/image/${cours.image}`}
+                                courseCategory={cours.type}
+                                courseTitle={cours.titre}
                                 studentQuantity="245"
-                                coursePrice="$55"
+                                coursePrice="FREE"
                                 btnText="Apply Now"
+                                btnLink={cours.id}
                             />
                         </div>
-                        <div className="col-lg-4 col-md-6 col-sm-6 mb-40">
-                            <CourseSingleFour
-                                courseClass="courses-item"
-                                courseImg={image2}
-                                courseCategory="Web Development"
-                                courseTitle="Become a PHP Master and Make Money Fast"
-                                studentQuantity="233"
-                                coursePrice="$57"
-                                btnText="Apply Now"
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6 col-sm-6 mb-40">
-                            <CourseSingleFour
-                                courseClass="courses-item"
-                                courseImg={image3}
-                                courseCategory="Web Development"
-                                courseTitle="Learn Python – Interactive Python Tutorial"
-                                studentQuantity="190"
-                                coursePrice="$30"
-                                btnText="Apply Now"
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6 col-sm-6 md-mb-30">
-                            <CourseSingleFour
-                                courseClass="courses-item"
-                                courseImg={image4}
-                                courseCategory="Web Development"
-                                courseTitle="From Zero to Hero with Advance Nodejs"
-                                studentQuantity="212"
-                                coursePrice="$99"
-                                btnText="Apply Now"
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6 col-sm-6 sm-mb-30">
-                            <CourseSingleFour
-                                courseClass="courses-item"
-                                courseImg={image5}
-                                courseCategory="Web Development"
-                                courseTitle="The Art of Black and White Photography"
-                                studentQuantity="233"
-                                coursePrice="$57"
-                                btnText="Apply Now"
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6 col-sm-6">
-                            <CourseSingleFour
-                                courseClass="courses-item"
-                                courseImg={image6}
-                                courseCategory="Web Development"
-                                courseTitle="Learning jQuery Mobile for Beginners"
-                                studentQuantity="233"
-                                coursePrice="$57"
-                                btnText="Apply Now"
-                            />
-                        </div>
+                         ))}
                     </div>
                 </div>
             </div>

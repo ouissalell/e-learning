@@ -101,3 +101,29 @@ export const createEvent = (req, res) => {
     });
 };
 
+
+export const getAllEventsId = (req, res) => {
+  const iduser = req.params.id_user;
+  const selectEventsQuery = "SELECT * FROM evenement WHERE iduser = iduser";
+
+  db.query(selectEventsQuery, iduser,(err, data) => {
+      if (err) {
+          console.error("Erreur lors de la récupération des événements :", err);
+          return res.status(500).json("Une erreur s'est produite lors de la récupération des événements.");
+      }
+
+      // Convertir les objets Date en chaînes de caractères au format "aaaa-mm-jj"
+      const eventsWithFormattedDates = data.map(event => {
+          // Convertir les dates en chaînes de caractères au format "aaaa-mm-jj"
+          const formattedEvent = {
+              ...event,
+              datedebut: event.datedebut.toISOString().split('T')[0], // Convertir la date de début en chaîne au format "aaaa-mm-jj"
+              datefin: event.datefin.toISOString().split('T')[0], // Convertir la date de fin en chaîne au format "aaaa-mm-jj"
+          };
+          return formattedEvent;
+      });
+
+      return res.status(200).json(eventsWithFormattedDates); // Renvoyer les événements avec les dates formatées en tant que réponse
+  });
+};
+

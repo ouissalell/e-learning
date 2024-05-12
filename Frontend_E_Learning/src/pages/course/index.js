@@ -11,9 +11,11 @@ import CourseMain from './CourseMain';
 import Logo from '../../assets/img/logo/dark-logo.png';
 import footerLogo from '../../assets/img/logo/lite-logo.png';
 
-import bannerbg from '../../assets/img/breadcrumbs/breadcrumbs.jpg';
+import bannerbg from '../../assets/img/breadcrumbs/inner12.jpg';
 
 const CourseOne = () => {
+
+    
 
     return (
         <React.Fragment>
@@ -34,8 +36,7 @@ const CourseOne = () => {
 
             {/* breadcrumb-area-start */}
             <SiteBreadcrumb
-                pageTitle="Course Grid 01"
-                innerClass="breadcrumbs-text"
+                pageTitle="Courses"
                 pageName="Course"
                 breadcrumbsImg={bannerbg}
             />

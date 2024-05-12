@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 import CourseSidebar from './CourseSidebarSection';
@@ -15,6 +16,21 @@ import courseImg7 from '../../assets/img/courses/7.jpg';
 import courseImg8 from '../../assets/img/courses/8.jpg';
 
 const CoursePart = (props) => {
+
+    const [courses, setCourses] = useState([]);
+
+    useEffect(() => {
+        fetchCourses();
+    }, []);
+
+    const fetchCourses = async () => {
+        try {
+            const response = await axios.get("http://localhost:8800/api/cours/getAllCourses");
+            setCourses(response.data);
+        } catch (error) {
+            console.error("Erreur lors de la récupération des événements :", error);
+        }
+    };
 
     const listClassAdd = () => {
         document.getElementById("rs-popular-course").classList.add('list-view');
@@ -55,56 +71,16 @@ const CoursePart = (props) => {
                             </div>
                         </div>
                         <div className="course-part clearfix">
+                        {courses.map((cours, index) => (
                             <CourseSingleTwo
                                 courseClass="courses-item"
-                                courseImg={courseImg1}
-                                courseTitle="Become a PHP Master and Make Money Fast"
-                                coursePrice="$40.00"
+                                courseImg={`http://localhost:8800/api/image/${cours.image}`}
+                                courseTitle={cours.titre}
+                                coursePrice="FREE"
+                                courseCategory={cours.type}
                             />
-                            <CourseSingleTwo
-                                courseClass="courses-item right"
-                                courseImg={courseImg2}
-                                courseTitle="Learning jQuery Mobile for Beginners"
-                                coursePrice="$28.00"
-                            />
-                            <CourseSingleTwo
-                                courseClass="courses-item"
-                                courseImg={courseImg3}
-                                courseTitle="The Art of Black and White Photography"
-                                coursePrice="$22.00"
-                                courseCategory="Photography"
-                            />
-                            <CourseSingleTwo
-                                courseClass="courses-item right"
-                                courseImg={courseImg4}
-                                courseTitle="Learn Python – Interactive Python Tutorial"
-                                coursePrice="$35.00"
-                            />
-                            <CourseSingleTwo
-                                courseClass="courses-item"
-                                courseImg={courseImg5}
-                                courseTitle="Your Complete Guide to Dark Photography"
-                                coursePrice="$25.00"
-                                courseCategory="Photography"
-                            />
-                            <CourseSingleTwo
-                                courseClass="courses-item right"
-                                courseImg={courseImg6}
-                                courseTitle="From Zero to Hero with Advance Nodejs"
-                                coursePrice="$40.00"
-                            />
-                            <CourseSingleTwo
-                                courseClass="courses-item"
-                                courseImg={courseImg3}
-                                courseTitle="Become a PHP Master and Make Money Fast"
-                                coursePrice="$22.00"
-                            />
-                            <CourseSingleTwo
-                                courseClass="courses-item right"
-                                courseImg={courseImg4}
-                                courseTitle="Introduction to Quantitativ and Qualitative"
-                                coursePrice="$35.00"
-                            />
+                        ))}
+                            
                         </div>
                         <div className="pagination-area orange-color text-center mt-30 md-mt-0">
                             <ul className="pagination-part">

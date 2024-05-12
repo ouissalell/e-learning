@@ -28,31 +28,21 @@ const MenuItems = (props) => {
         <React.Fragment>
             <li className={parentMenu === 'home' ? 'rs-mega-menu menu-item-has-children current-menu-item' : 'rs-mega-menu menu-item-has-children'}><Link to="/">Home</Link>
             </li>
-            <li className={parentMenu === 'about' ? 'menu-item-has-children current-menu-item' : 'menu-item-has-children'}>
-                <Link to="#">About</Link>
-                
-            </li>
+            
             
             <li className={parentMenu === 'course' ? 'menu-item-has-children current-menu-item' : 'menu-item-has-children'}>
             <Link to="/course" as="#">Courses</Link>
                 {rol && (rol === 'admin' || rol === 'enseignant') && (
                     <ul className="sub-menu">
                         <li>
-                            <Link to="/course" className={location.pathname === "/course" ? "active-menu" : ""}>Add Courses</Link>
+                            <Link to="/admin/mycours" className={location.pathname === "/admin/mycours" ? "active-menu" : ""}>My Courses</Link>
+                        </li>
+                        <li>
+                            <Link to="/admin/createcours" className={location.pathname === "/admin/createcours" ? "active-menu" : ""}>Add Courses</Link>
                         </li>
                         <li>
                             <Link to="/course-2" className={location.pathname === "/course-2" ? "active-menu" : ""}>Update Courses</Link>
                         </li>
-                        {rol === 'admin' && (
-                            <>
-                                <li>
-                                    <Link to="/admin/createns" className={location.pathname === "/admin/createns" ? "active-menu" : ""}>Add enseignant</Link>
-                                </li>
-                                <li>
-                                    <Link to="/admin/createns" className={location.pathname === "/admin/createns" ? "active-menu" : ""}>Update enseignant</Link>
-                                </li>
-                            </>
-                        )}
                     </ul>
                 )}
 
@@ -62,6 +52,9 @@ const MenuItems = (props) => {
                 <Link to="/event-3">Evenement</Link>
                 {rol && (rol === 'admin' || rol === 'enseignant') && (
                     <ul className="sub-menu">
+                        <li>
+                            <Link to="/admin/myevent" className={location.pathname === "/course" ? "active-menu" : ""}>My Event</Link>
+                        </li>
                         <li>
                             <Link to="/admin/createvt" className={location.pathname === "/course" ? "active-menu" : ""}>Add Evenement</Link>
                         </li>
@@ -74,8 +67,25 @@ const MenuItems = (props) => {
                 
             </li>
             <li className={parentMenu === 'blog' ? 'menu-item-has-children current-menu-item' : 'menu-item-has-children'}>
-                <Link to="#">Blog</Link>
-               
+                <Link to="#">enseignant</Link>
+                {rol && (rol === 'admin') && (
+                    <ul className="sub-menu">
+                        <li>
+                            <Link to="/admin/myevent" className={location.pathname === "/course" ? "active-menu" : ""}>Liste enseignant</Link>
+                        </li>
+                        <li>
+                            <Link to="/admin/createns" className={location.pathname === "/admin/createns" ? "active-menu" : ""}>Add enseignant</Link>
+                        </li>
+                        <li>
+                            <Link to="/course-2" className={location.pathname === "/course-2" ? "active-menu" : ""}>Update enseignant</Link>
+                        </li>
+                        
+                    </ul>
+                )}
+            </li>
+            <li className={parentMenu === 'about' ? 'menu-item-has-children current-menu-item' : 'menu-item-has-children'}>
+                <Link to="#">About</Link>
+                
             </li>
             <li className={parentMenu === 'contact' ? 'menu-item-has-children current-menu-item' : 'menu-item-has-children'}>
                 <Link to="#">

@@ -9,6 +9,7 @@ import SearchModal from '../../components/Layout/Header/SearchModal';
 import Newsletter from '../../components/Common/Newsletter';
 import ScrollToTop from '../../components/Common/ScrollTop';
 import SiteBreadcrumb from '../../components/Common/Breadcumb';
+import { useAuth } from '../../context/authContext'; 
 
 // Image
 import favIcon from '../../assets/img/fav-orange.png';
@@ -24,6 +25,7 @@ import eventImg3 from '../../assets/img/event/home12/3.jpg';
 import eventImg4 from '../../assets/img/event/home12/4.jpg';
 
 const Event = () => {
+    const { idUser } = useAuth();
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
@@ -31,8 +33,9 @@ const Event = () => {
     }, []);
 
     const fetchEvents = async () => {
+        const id_user = await idUser();
         try {
-            const response = await axios.get("http://localhost:8800/api/event/getAllEvents");
+            const response = await axios.get(`http://localhost:8800/api/event/getAllEventsId/${id_user}`);
             setEvents(response.data);
         } catch (error) {
             console.error("Erreur lors de la récupération des événements :", error);

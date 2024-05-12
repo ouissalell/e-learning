@@ -2,10 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const CourseSingleFour = (props) => {
-    const { courseClass, courseCategory, courseImg, catLink, courseTitle, coursePrice, studentQuantity, userRating, btnText, metaIcon } = props;
+    const { btnLink, courseClass, courseCategory, courseImg, catLink, courseTitle, coursePrice, studentQuantity, userRating, btnText, metaIcon } = props;
 
     return (
-        <div className={courseClass ? courseClass : 'courses-item'}>
+        <div style={{height: "480px"}} className={courseClass ? courseClass : 'courses-item'}>
             <div className="img-part">
                 <img
                     src={courseImg}
@@ -39,7 +39,7 @@ const CourseSingleFour = (props) => {
                         </ul>
                     </div>
                     <div className="btn-part">
-                        <Link to="/course/course-single">{btnText ? btnText : 'Apply Now'} <i className="flaticon-next"></i></Link>
+                        <Link to={btnLink ? `/admin/createchapitre/${btnLink}` : '#'}>{btnText ? btnText : 'Apply Now'} <i className="flaticon-next"></i></Link>
                     </div>
                 </div>
             </div>

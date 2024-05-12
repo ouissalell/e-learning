@@ -2,6 +2,8 @@ import express from "express";
 import authRoutes from "./routes/auth.js";
 import eventRoutes from "./routes/event.js";
 import imageRoutes from "./routes/image.js";
+import coursRoutes from "./routes/cours.js";
+import chapitreRoutes from "./routes/chapitre.js";
 import cookieParser from "cookie-parser";
 
 
@@ -20,6 +22,8 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/event", eventRoutes);
 app.use("/api/image", imageRoutes);
+app.use("/api/cours", coursRoutes);
+app.use("/api/chapitre", chapitreRoutes);
 
 
 app.listen(8800, () => {
