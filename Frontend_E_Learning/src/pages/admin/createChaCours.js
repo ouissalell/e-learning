@@ -161,11 +161,11 @@ const handleInputChange = (e) => {
                             <ul>
                             {chapitre.map((chapitre, index) => (
                                 <li>
-                                    <div style={{display:"flex"}}>
+                                    <div className='li-' style={{display:"flex"}}>
                                         <div class="date">
                                             <span>{index +1}</span>
                                         </div>
-                                            <div class="desc"><a href='#'>{chapitre.nom_chapitre}</a></div>
+                                            <div class="desc"><a href={`/admin/createactivite/${chapitre.id_chapitre}`}>{chapitre.nom_chapitre}</a></div>
                                         <div className='ul-img-chap'>
                                             <button>
                                                 <img width="20" height="20" src="https://img.icons8.com/pastel-glyph/64/1A1A1A/create-new--v2.png" alt="create-new--v2"/>

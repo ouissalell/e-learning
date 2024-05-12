@@ -61,6 +61,7 @@ import { AuthContextProvider } from '../context/authContext';
 import CreateEvt from '../pages/admin/createEvt';
 import CreateCours from '../pages/admin/createCours';
 import CreateChaCours from '../pages/admin/createChaCours';
+import CreateActivite from '../pages/admin/CreateActivite';
 
 const App = () => {
     return (
@@ -131,6 +132,7 @@ const App = () => {
                     <Route path="/admin/mycours" element={<CourseThree/>} />
                     <Route path="/course" exact element={<CourseOne/>} />
                     <Route path="/admin/createchapitre/:id" exact element={<CreateChaCours/>} />
+                    <Route path="/admin/createactivite/:id" exact element={<CreateActivite/>} />
                     
                 </Routes>
                 </AuthContextProvider>
