@@ -71,9 +71,9 @@ export const getAllCourses = (req, res) => {
 
 
 export const getAllCoursesId = (req, res) => {
-    const id_user = req.params.id_user; // Assuming id_user is passed as a parameter in the URL
+    const id_user = req.params.id; // Assuming id_user is passed as a parameter in the URL
     
-    const selectCoursesQuery = "SELECT * FROM Cours WHERE id_user = id_user";
+    const selectCoursesQuery = "SELECT * FROM Cours WHERE id_user = ?";
 
     db.query(selectCoursesQuery, id_user, (err, data) => {
         if (err) {

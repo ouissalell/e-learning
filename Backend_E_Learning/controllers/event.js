@@ -104,7 +104,7 @@ export const createEvent = (req, res) => {
 
 export const getAllEventsId = (req, res) => {
   const iduser = req.params.id_user;
-  const selectEventsQuery = "SELECT * FROM evenement WHERE iduser = iduser";
+  const selectEventsQuery = "SELECT * FROM evenement WHERE iduser = ?";
 
   db.query(selectEventsQuery, iduser,(err, data) => {
       if (err) {
