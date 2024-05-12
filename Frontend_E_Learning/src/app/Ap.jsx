@@ -59,6 +59,8 @@ import LoadTop from '../components/Common/ScrollTop/LoadTop';
 import CreateEns from '../pages/admin/createEns'
 import { AuthContextProvider } from '../context/authContext';
 import CreateEvt from '../pages/admin/createEvt';
+import CreateCours from '../pages/admin/createCours';
+import CreateChaCours from '../pages/admin/createChaCours';
 
 const App = () => {
     return (
@@ -86,9 +88,9 @@ const App = () => {
                     <Route path="/home-15" element={<HomeFifteen/>} />
                     <Route path="/about" element={<About/>} />
                     <Route path="/about-2" element={<AboutTwo/>} />
-                    <Route path="/course" exact element={<CourseOne/>} />
+                    
                     <Route path="/course-2" element={<CourseTwo/>} />
-                    <Route path="/course-3" element={<CourseThree/>} />
+                   
                     <Route path="/course-4" element={<CourseFour/>} />
                     <Route path="/course-5" element={<CourseFive/>} />
                     <Route path="/course-6" element={<CourseSix/>} />
@@ -97,7 +99,7 @@ const App = () => {
                     <Route path="/team" exact element={<Team/>} />
                     <Route path="/team-2" element={<TeamTwo/>} />
                     <Route path="/team/team-single" element={<TeamSingle/>} />
-                    <Route path="/event" element={<Event/>} />
+                    
                     <Route path="/event-2" element={<EventTwo/>} />
                     <Route path="/event-3" element={<EventThree/>} />
                     <Route path="/gallery" element={<Gallery/>} />
@@ -124,6 +126,12 @@ const App = () => {
                     <Route element={<Error/>} />
                     <Route path="/admin/createns" element={<CreateEns/>} />
                     <Route path="/admin/createvt" element={<CreateEvt/>} />
+                    <Route path="/admin/myevent" element={<Event/>} />
+                    <Route path="/admin/createcours" element={<CreateCours/>} />
+                    <Route path="/admin/mycours" element={<CourseThree/>} />
+                    <Route path="/course" exact element={<CourseOne/>} />
+                    <Route path="/admin/createchapitre/:id" exact element={<CreateChaCours/>} />
+                    
                 </Routes>
                 </AuthContextProvider>
                 </Router>

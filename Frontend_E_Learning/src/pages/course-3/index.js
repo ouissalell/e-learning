@@ -34,8 +34,8 @@ const CourseThree = () => {
 
             {/* breadcrumb-area-start */}
             <SiteBreadcrumb
-                pageTitle="Course Grid 03"
-                pageName="Course"
+                pageTitle="My Course "
+                pageName="my Course"
                 breadcrumbsImg={bannerbg}
             />
             {/* breadcrumb-area-start */}

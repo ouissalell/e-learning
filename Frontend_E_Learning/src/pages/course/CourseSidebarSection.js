@@ -35,18 +35,6 @@ const CourseSidebar = () => {
                                     </div>
                                 </div>
 
-                                <div className="single-filter mb-30">
-                                    <h5>Price Level</h5>
-                                    <div className="radio-box form-group">
-                                        <input type="radio" name="price" id="type4" value="free" checked />
-                                        <label for="type4">Free (14)</label>
-                                    </div>
-
-                                    <div className="radio-box form-group">
-                                        <input type="radio" name="price" id="type5" value="paid" />
-                                        <label for="type5">Paid (26)</label>
-                                    </div>
-                                </div>
 
                                 <div className="single-filter mb-30">
                                     <h5>Duration Time</h5>
