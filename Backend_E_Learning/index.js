@@ -6,6 +6,10 @@ import videoRoutes from "./routes/video.js";
 import coursRoutes from "./routes/cours.js";
 import activiteRoutes from "./routes/activite.js";
 import chapitreRoutes from "./routes/chapitre.js";
+import questionRoutes from "./routes/question.js";
+import repenseRoutes from "./routes/repense.js";
+import lectureRoutes from "./routes/lecture.js";
+import quizRoutes from "./routes/quiz.js";
 import cookieParser from "cookie-parser";
 
 
@@ -28,6 +32,10 @@ app.use("/api/video", videoRoutes);
 app.use("/api/cours", coursRoutes);
 app.use("/api/chapitre", chapitreRoutes);
 app.use("/api/activite", activiteRoutes);
+app.use("/api/quiz", quizRoutes);
+app.use("/api/question", questionRoutes);
+app.use("/api/repense", repenseRoutes);
+app.use("/api/lecture", lectureRoutes);
 
 
 app.listen(8800, () => {

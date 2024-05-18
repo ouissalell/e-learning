@@ -1,8 +1,49 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useId, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/authContext'; 
+import axios from "axios";
 
 const CourseSingleTwo = (props) => {
-    const { courseClass, courseImg, courseTitle, catLink, coursePrice, courseCategory, userCount, userRating } = props;
+    const { courseid ,courseClass, courseImg, courseTitle, catLink, coursePrice, courseCategory, userCount, userRating } = props;
+    const { idUser } = useAuth();
+    const [edu, setEdu] = useState();
+    const navigate = useNavigate();
+    
+    const handleSubmit = async (e) => {
+        const userid = await idUser();
+        if(userid===0){
+            navigate('/login')
+        }
+        e.preventDefault();
+        try {
+           console.log(userid , courseid)
+            await axios.post("http://localhost:8800/api/lecture/createLecture", {
+                avancement : 1,
+                id_cours : courseid,
+                id_user:userid,
+            });
+            navigate(`/course/course/${courseid}`)
+            
+        } catch (err) {
+           
+                console.error('Une erreur inattendue s\'est produite lors de la création de l\'événement.');
+           
+        }
+    };
+       
+        const fetchEdu = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8800/api/lecture/getLectureCours/${courseid}`);
+                setEdu(response.data);
+            } catch (error) {
+                console.error("Erreur lors de la récupération des événements :", error);
+            }
+        };
+    
+    useEffect(() => {
+        fetchEdu();
+       
+    }, []);
     return (
         <div className={courseClass ? courseClass : 'courses-item'}>
             <div className="img-part">
@@ -16,11 +57,11 @@ const CourseSingleTwo = (props) => {
                     <li><span className="price">{coursePrice ? coursePrice : '55.00'}</span></li>
                     <li><Link className="categorie" to={catLink ? catLink : 'course-categories'}>{courseCategory ? courseCategory : 'Web Development'}</Link></li>
                 </ul>
-                <h3 className="title"><Link to="/course/course-single">{courseTitle ? courseTitle : 'Become a PHP Master and Make Money Fast'}</Link></h3>
+                <h3 className="title"><Link to={`/course/course/${courseid}`}>{courseTitle ? courseTitle : 'Become a PHP Master and Make Money Fast'}</Link></h3>
                 <div className="bottom-part">
                     <div className="info-meta">
                         <ul>
-                            <li className="user"><i className="fa fa-user"></i> {userCount ? userCount : '245'}</li>
+                            <li className="user"><i className="fa fa-user"></i> {edu && edu}</li>
                             <li className="ratings">
                                 <i className="fa fa-star"></i>
                                 <i className="fa fa-star"></i>
@@ -30,9 +71,9 @@ const CourseSingleTwo = (props) => {
                         </ul>
                     </div>
                     <div className="btn-part">
-                        <Link to="/course/course-single">
-                            {props.btnText}<i className="flaticon-right-arrow"></i>
-                        </Link>
+                        <button onClick={handleSubmit}>
+                            <i className="flaticon-right-arrow"></i>
+                        </button>
                     </div>
                 </div>
             </div>

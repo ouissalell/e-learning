@@ -1,14 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const CourseSidebar = () => {
+const CourseSidebar = ({ handleSearch, handleFilterDuration, handleFilterLevel, handleFilterCategory }) => {
+    const [selectedSkill, setSelectedSkill] = useState('');
+    const [selectedDuration, setSelectedDuration] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('');
+
+    const handleSkillChange = (e) => {
+        const value = e.target.value;
+        setSelectedSkill(selectedSkill === value ? '' : value);
+        handleFilterLevel(selectedSkill === value ? '' : value);
+    };
+
+    const handleDurationChange = (e) => {
+        const value = e.target.value;
+        setSelectedDuration(selectedDuration === value ? '' : value);
+        handleFilterDuration(selectedDuration === value ? '' : value);
+    };
+
+    const handleCategoryChange = (e) => {
+        const category = e.target.value;
+        setSelectedCategory(category);
+        handleFilterCategory(category);
+    };
+
     return (
         <React.Fragment>
             <div className="widget-area">
                 <div className="search-widget mb-50">
                     <h3 className="widget-title">Course Search</h3>
                     <div className="search-wrap">
-                        <input type="search" placeholder="Searching..." name="s" className="search-input" value="" />
+                        <input
+                            type="search"
+                            placeholder="Searching..."
+                            name="s"
+                            className="search-input"
+                            onChange={(e) => handleSearch(e.target.value)}
+                        />
                         <button type="submit" value="Search"><i className=" flaticon-search"></i></button>
                     </div>
                 </div>
@@ -16,112 +44,77 @@ const CourseSidebar = () => {
                     <h3 className="widget-title">Filter By</h3>
                     <div className="filter-widget">
                         <div className="filter-form">
-                            <form method="post" action="mailer.php">
+                            <form>
                                 <div className="single-filter mb-30">
                                     <h5>Skill Level</h5>
                                     <div className="radio-box form-group">
-                                        <input type="radio" name="skill" id="type1" value="beginer" checked />
-                                        <label for="type1">Beginner</label>
+                                        <input type="radio" name="skill" id="type1" value="beginner" checked={selectedSkill === 'beginner'} onChange={handleSkillChange} />
+                                        <label htmlFor="type1">Beginner</label>
                                     </div>
 
                                     <div className="radio-box form-group">
-                                        <input type="radio" name="skill" id="type2" value="intermediate" />
-                                        <label for="type2">Intermediate</label>
+                                        <input type="radio" name="skill" id="type2" value="intermediate" checked={selectedSkill === 'intermediate'} onChange={handleSkillChange} />
+                                        <label htmlFor="type2">Intermediate</label>
                                     </div>
 
                                     <div className="radio-box form-group">
-                                        <input type="radio" name="skill" id="type3" value="expert" />
-                                        <label for="type3">Expert</label>
+                                        <input type="radio" name="skill" id="type3" value="expert" checked={selectedSkill === 'expert'} onChange={handleSkillChange} />
+                                        <label htmlFor="type3">Expert</label>
                                     </div>
                                 </div>
-
 
                                 <div className="single-filter mb-30">
                                     <h5>Duration Time</h5>
                                     <div className="radio-box form-group">
-                                        <input type="radio" name="duration" id="type6" value="six" checked />
-                                        <label for="type6">5+ hours (30)</label>
+                                        <input type="radio" name="duration" id="type6" value="5" checked={selectedDuration === '5'} onChange={handleDurationChange} />
+                                        <label htmlFor="type6">5+ hours</label>
                                     </div>
 
                                     <div className="radio-box form-group">
-                                        <input type="radio" name="duration" id="type7" value="paid" />
-                                        <label for="type7">10+ hours (20)</label>
+                                        <input type="radio" name="duration" id="type7" value="10" checked={selectedDuration === '10'} onChange={handleDurationChange} />
+                                        <label htmlFor="type7">10+ hours</label>
                                     </div>
 
                                     <div className="radio-box form-group">
-                                        <input type="radio" name="duration" id="type8" value="paid" />
-                                        <label for="type8">15+ hours (5)</label>
+                                        <input type="radio" name="duration" id="type8" value="15" checked={selectedDuration === '15'} onChange={handleDurationChange} />
+                                        <label htmlFor="type8">15+ hours</label>
                                     </div>
                                 </div>
 
                                 <div className="single-filter mb-30">
-                                    <h5>Course Type</h5>
-                                    <div className="check-box form-group mb-0">
-                                        <input type="checkbox" name="course" id="check1" value="check1" checked />
-                                        <label for="check1">Backend (3)</label>
+                                    <h5>Type</h5>
+                                    <div className="radio-box form-group">
+                                        <input type="radio" name="category" id="cat1" value="College" checked={selectedCategory === 'College'} onChange={handleCategoryChange} />
+                                        <label htmlFor="cat1">College</label>
                                     </div>
-                                    <div className="check-box form-group mb-0">
-                                        <input type="checkbox" name="course" id="check2" value="check2" />
-                                        <label for="check2">CSS (6)</label>
+                                    <div className="radio-box form-group">
+                                        <input type="radio" name="category" id="cat2" value="High School" checked={selectedCategory === 'High School'} onChange={handleCategoryChange} />
+                                        <label htmlFor="cat2">High School</label>
                                     </div>
-                                    <div className="check-box form-group mb-0">
-                                        <input type="checkbox" name="course" id="check3" value="check3" />
-                                        <label for="check3">Frontend (8)</label>
+                                    <div className="radio-box form-group">
+                                        <input type="radio" name="category" id="cat3" value="Primary" checked={selectedCategory === 'Primary'} onChange={handleCategoryChange} />
+                                        <label htmlFor="cat3">Primary</label>
                                     </div>
-                                    <div className="check-box form-group mb-0">
-                                        <input type="checkbox" name="course" id="check4" value="check4" />
-                                        <label for="check4">General (3)</label>
+                                    <div className="radio-box form-group">
+                                        <input type="radio" name="category" id="cat4" value="School" checked={selectedCategory === 'School'} onChange={handleCategoryChange} />
+                                        <label htmlFor="cat4">School</label>
                                     </div>
-                                    <div className="check-box form-group mb-0">
-                                        <input type="checkbox" name="course" id="check5" value="check5" />
-                                        <label for="check5">Photography (7)</label>
+                                    <div className="radio-box form-group">
+                                        <input type="radio" name="category" id="cat5" value="University" checked={selectedCategory === 'University'} onChange={handleCategoryChange} />
+                                        <label htmlFor="cat5">University</label>
                                     </div>
-                                    <div className="check-box form-group mb-0">
-                                        <input type="checkbox" name="course" id="check6" value="check6" />
-                                        <label for="check6">Photography (4)</label>
-                                    </div>
-                                    <div className="check-box form-group mb-0">
-                                        <input type="checkbox" name="course" id="check7" value="check7" />
-                                        <label for="check7">Technology (5)</label>
-                                    </div>
-                                </div>
 
-                                <div className="single-filter mb-30">
-                                    <h5>Instructor</h5>
-                                    <div className="check-box form-group mb-0">
-                                        <input type="checkbox" id="check8" name="check8" value="check8" checked />
-                                        <label for="check8">Stuard (5)</label>
-                                    </div>
-                                    <div className="check-box form-group mb-0">
-                                        <input type="checkbox" id="check9" name="check9" value="check9" />
-                                        <label for="check9">Benjamin (4)</label>
-                                    </div>
-                                    <div className="check-box form-group mb-0">
-                                        <input type="checkbox" id="check10" name="check10" value="check10" />
-                                        <label for="check10">Mickel (7)</label>
-                                    </div>
-                                    <div className="check-box form-group mb-0">
-                                        <input type="checkbox" id="check11" name="check11" value="check11" />
-                                        <label for="check11">Johnson (2)</label>
-                                    </div>
-                                    <div className="check-box form-group mb-0">
-                                        <input type="checkbox" id="check12" name="check12" value="check12" />
-                                        <label for="check12">Elijabeth (5)</label>
-                                    </div>
-                                    <div className="check-box form-group mb-0">
-                                        <input type="checkbox" id="check13" name="check13" value="check13" />
-                                        <label for="check13">Rebeka (4)</label>
-                                    </div>
+                                    {/* Ajoutez d'autres boutons radio pour les autres catégories ici */}
                                 </div>
 
                                 <div className="form-group mb-0">
-                                    <input className="readon2 orange" type="submit" value="Submit Now" />
+                                    <input className="readon2 orange" type="submit"  />
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                <div className="widget-archives md-mb-50">
+                {/* <div className="widget-archives md-mb-50">
                     <h3 className="widget-title">Course Categories</h3>
                     <ul className="categories">
                         <li><Link to="/course-categories">College</Link></li>
@@ -130,11 +123,10 @@ const CourseSidebar = () => {
                         <li><Link to="/course-categories">School</Link></li>
                         <li><Link to="/course-categories">University</Link></li>
                     </ul>
-                </div>
+                </div> */}
             </div>
         </React.Fragment>
     );
-
 }
 
 export default CourseSidebar;

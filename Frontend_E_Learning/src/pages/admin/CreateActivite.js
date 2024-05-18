@@ -33,6 +33,7 @@ const CreateActivite = () => {
         titre: "",
         categorie:"",
         contenu:"",
+        duration:"",
         image :null,
         video:null
     });
@@ -79,6 +80,7 @@ const handleVideoChange = (e) => {
                 titre : inputs.titre,
                 categorie : inputs.categorie,
                 contenu:inputs.contenu,
+                duration:inputs.duration,
                 id_chapitre:id
             });
             toast.success('Activité créé avec succès', {
@@ -94,6 +96,7 @@ const handleVideoChange = (e) => {
                 titre : "",
                 contenu:"",
                 categorie:"",
+                duration:"",
                 image:null,
                 video:null
             });
@@ -116,6 +119,7 @@ const handleVideoChange = (e) => {
             formData.append('titre', inputs.titre);
             formData.append('categorie', inputs.categorie);
             formData.append('image', inputs.image);
+            formData.append('duration', inputs.duration);
             formData.append('id_chapitre', id);
             await axios.post("http://localhost:8800/api/activite/createActivitei",formData, {
                 headers: {
@@ -134,6 +138,7 @@ const handleVideoChange = (e) => {
             setInputs({
                 titre : "",
                 contenu:"",
+                duration:"",
                 image:null,
                 categorie:""
             });
@@ -156,6 +161,7 @@ const handleVideoChange = (e) => {
             formData.append('titre', inputs.titre);
             formData.append('categorie', inputs.categorie);
             formData.append('video', inputs.video);
+            formData.append('duration', inputs.duration);
             formData.append('id_chapitre', id);
             await axios.post("http://localhost:8800/api/activite/createActivitev",formData, {
                 headers: {
@@ -174,6 +180,7 @@ const handleVideoChange = (e) => {
             setInputs({
                 titre : "",
                 contenu:"",
+                duration:"",
                 video : null,
                 categorie:""
             });
@@ -235,6 +242,12 @@ const handleVideoChange = (e) => {
         setOpenModalVideo(true);
         setOpenModal(false)
       }
+      const openCat=()=>{
+        setOpenModal(true);
+        setOpenModalVideo(false);
+        setOpenModalImage(false);
+        setOpenModalText(false);
+      }
        
     return (
         <React.Fragment>
@@ -243,7 +256,7 @@ const handleVideoChange = (e) => {
             </Helmet>
             <OffWrap />
             <Header
-                parentMenu='pages'
+                parentMenu='course'
                 secondParentMenu='others'
                 headerNormalLogo={Logo}
                 headerStickyLogo={Logo}
@@ -259,8 +272,8 @@ const handleVideoChange = (e) => {
 
             {/* breadcrumb-area-start */}
             <SiteBreadcrumb
-                pageTitle=" Cours"
-                pageName="Create Cours"
+                pageTitle=" Activité"
+                pageName="Create Activité"
                 breadcrumbsImg={bannerbg}
             />
             {/* breadcrumb-area-End */}
@@ -281,7 +294,7 @@ const handleVideoChange = (e) => {
                     <div class="notice-bord style1">
                     
                         <div>
-                            <h4 class="title">Activité de Chapitre  : <span style={{color:"black" , fontSize:"16px" , marginLeft:"10px"}}></span></h4>
+                            <h4 class="title">les Activité de Chapitre  : <span style={{color:"black" , fontSize:"16px" , marginLeft:"10px"}}></span></h4>
                         </div>
                         <div className='chap-f-b'>
 
@@ -295,7 +308,7 @@ const handleVideoChange = (e) => {
                                                     <span>{index + 1}</span>
                                                 </div>
                                                 <div className="desc">
-                                                    <a href='#'>{activites.titre}</a>
+                                                    <a href='#'>{activites.titre } </a>
                                                 </div>
                                                 <div className='ul-img-chap'>
                                                     <button onClick={() => toggleActivite(index)}>
@@ -378,9 +391,14 @@ const handleVideoChange = (e) => {
                            
                                     <div className="">
                                     <textarea  id="contenu" name="contenu" placeholder="contenu" value={inputs.contenu} onChange={handleInputChange}  required=""></textarea>
-                                        <input type="text" id="titre" name="titre"  placeholder="Titre de Activite" value={inputs.titre} onChange={handleInputChange}  required />
+                                    <div className='style-2-input-cat'>
+                                    <input type="text" id="titre" name="titre"  placeholder="Titre de Activite" value={inputs.titre} onChange={handleInputChange}  required />
+                                    <input type="number" id="duration" name="duration"  placeholder="durée par min" value={inputs.duration} onChange={handleInputChange}  required />
+                                        
+                                        </div>
                                     </div>
                                     <button>Submit</button>
+                                    <div class="users-a-a">change Categorie? <a onClick={openCat}>categories</a></div>
                             </form>
                         </div>
                     </div>
@@ -402,9 +420,14 @@ const handleVideoChange = (e) => {
                                             )}
                                             <input  type="file" id="image" name="image" onChange={handleImageChange}   hidden />
                                         </label>
+                                        <div className='style-2-input-cat'>
+                                        
                                         <input type="text" id="titre" name="titre"  placeholder="Titre de Activite" value={inputs.titre} onChange={handleInputChange}  required />
+                                        <input type="number" id="duration" name="duration"  placeholder="durée par min" value={inputs.duration} onChange={handleInputChange}  required />
+                                        </div>
                                     </div>
                                     <button>Submit</button>
+                                    <div class="users-a-a">change Categorie? <a onClick={openCat}>categories</a></div>
                             </form>
                         </div>
                     </div>
@@ -431,13 +454,19 @@ const handleVideoChange = (e) => {
                     ) : (
                         <img style={{marginLeft:"30%",marginTop:"6%",width:"40%", height:"60%",position:"relative"}} src="https://img.icons8.com/quill/100/1A1A1A/video.png" alt="image"/>
                     )}
+                    
                     <input  type="file" id="video" name="video" onChange={handleVideoChange}   hidden />
                 </label>
-                            {/* Champ de titre de l'activité */}
+                            <div className='style-2-input-cat'>
                             <input type="text" id="titre" name="titre"  placeholder="Titre de Activite" value={inputs.titre} onChange={handleInputChange}  required />
+                                <input type="number" id="duration" name="duration"  placeholder="durée par min" value={inputs.duration} onChange={handleInputChange}  required />
+                               
+                            </div>
+                            
                         </div>
                         {/* Bouton de soumission du formulaire */}
                         <button>Submit</button>
+                        <div class="users-a-a">change Categorie? <a onClick={openCat}>categories</a></div>
                     </form>
                 </div>
             </div>

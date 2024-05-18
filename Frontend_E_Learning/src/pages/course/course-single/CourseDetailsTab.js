@@ -12,8 +12,8 @@ const CourseDetailsTab = () => {
 
     let tab1 = "Overview",
         tab2 = "Curriculum",
-        tab3 = "Instructor",
-        tab4 = "Faq",
+        tab3 = "Quiz",
+        tab4 = "Instructor",
         tab5 = "Reviews"
     const tabStyle = 'intro-tabs tabs-box';
 
@@ -45,13 +45,13 @@ const CourseDetailsTab = () => {
                 <TabPanel>
                     <CurriculumPart />
                 </TabPanel>
-
+                
                 <TabPanel>
-                    <InstructorPart />
+                    <FaqPart />
                 </TabPanel>
 
                 <TabPanel>
-                    <FaqPart />
+                    <InstructorPart />
                 </TabPanel>
 
                 <TabPanel>
