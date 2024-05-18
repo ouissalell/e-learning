@@ -48,7 +48,7 @@ const EventThree = () => {
             </Helmet>
             <OffWrap />
             <Header
-                parentMenu='pages'
+                parentMenu='event'
                 secondParentMenu='event'
                 headerNormalLogo={Logo}
                 headerStickyLogo={Logo}

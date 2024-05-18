@@ -1,11 +1,12 @@
 import express from "express";
-import { createChapitre,getChapitre } from "../controllers/chapitre.js";
+import { createChapitre,getChapitre,getChapitreAndActivite } from "../controllers/chapitre.js";
 
 
 const router = express.Router();
 
 router.post("/createChapitre", createChapitre);
 router.get("/getChapitre/:id", getChapitre);
+router.get("/getChapitreAndActivite/:id", getChapitreAndActivite);
 
 
 

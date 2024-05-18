@@ -36,22 +36,26 @@ export const createCours = (req, res) => {
             return res.status(500).json("Une erreur inattendue s'est produite lors du téléchargement de l'image.");
         }
 
-        const { titre, description, dateCre, type, level,id_user  } = req.body;
+        const { titre, description, dateCre, type, level,id_user,duration  } = req.body;
         const imageName = req.file.filename; // Nom de l'image téléchargée
 
-        if (  !titre || !description || !dateCre || !type || !level || !id_user || !imageName) {
+        if (  !titre || !description || !dateCre || !type || !level || !id_user || !imageName || !duration) {
             return res.status(400).json("Tous les champs sont requis.");
         }
 
-        const insertCoursQuery = "INSERT INTO Cours ( titre, description, dateCre, type, level, id_user ,image) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        const values = [titre, description, dateCre, type, level, id_user , imageName];
+        const insertCoursQuery = "INSERT INTO Cours ( titre, description, dateCre, type, level, id_user ,image,duration) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+        const values = [titre, description, dateCre, type, level, id_user , imageName,duration];
 
         db.query(insertCoursQuery, values, (err, data) => {
             if (err) {
                 console.error("Erreur lors de la création du cours :", err);
                 return res.status(500).json("Une erreur s'est produite lors de la création du cours.");
             }
-            return res.status(200).json("Le cours a été créé avec succès.");
+            const coursId = data.insertId; // Récupérer l'ID du cours inséré
+
+            return res.status(200).json({ message: "Le cours a été créé avec succès.", coursId: coursId });
+      
+
         });
     });
 };

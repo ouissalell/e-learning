@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Link,useParams } from 'react-router-dom';
 import ModalVideo from 'react-modal-video';
+import '../../../assets/scss/modal.scss';
+import { useAuth } from '../../../context/authContext'; 
 
 import {
     Accordion,
@@ -10,140 +13,126 @@ import {
     AccordionItemButton,
 } from 'react-accessible-accordion';
 
-const CurriculumPart = () => {
 
-    const [isOpen, setIsOpen] = useState(false);
-    const openModal = () => setIsOpen(!isOpen);
+const CurriculumPart = () => {
+    const { idUser } = useAuth();
+    const { id } = useParams();
+    const [course, setCourse] = useState([]);
+    const [chapitre, setChapitre] = useState([]);
+    const [quiz,setQuiz]=useState([]);
+
+    const [a,setA] =useState(false);
+
+    const [openIndex, setOpenIndex] = useState(null); // État pour suivre l'index de l'activité ouverte
+
+    const toggleActivite = (index) => {
+        setOpenIndex(openIndex === index ? null : index); // Ouvre ou ferme l'activité en fonction de son index
+    };
+
+    useEffect(() => {
+        fetchQuiz();
+        fetchCourse();
+        getChapitreAndActivite();
+       
+    }, [id]);
+   
+
+    const fetchCourse = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8800/api/cours/getCourse/${id}`);
+            setCourse(response.data[0]);
+            
+        } catch (error) {
+            console.error("Erreur lors de la récupération des événements :", error);
+        }
+    };
+    const getChapitreAndActivite= async ()=>{
+        try {
+            const response = await axios.get(`http://localhost:8800/api/chapitre/getChapitreAndActivite/${id}`);
+            setChapitre(response.data);
+        } catch (error) {
+            console.error("Erreur lors de la récupération des événements :", error);
+        }
+    }
+    const fetchQuiz = async () => {
+       
+        try {
+            const response = await axios.get(`http://localhost:8800/api/quiz/getQuiz/${id}`);
+            setQuiz(response.data);
+            
+        } catch (error) {
+            console.error("Erreur lors de la récupération des quiz :", error);
+        }
+    };
+
+    const toggleChapitre = (index) => {
+        setOpenIndex(openIndex === index ? null : index); 
+    };
     return (
         <div className="content">
-            <Accordion className="accordion-box" preExpanded={'a'}>
-                <AccordionItem className="accordion-item" uuid="a">
-                    <AccordionItemHeading>
-                        <AccordionItemButton>
-                            <button>UI/ UX Introduction</button>
+            {chapitre && chapitre.map((chapitre, index) => (
+            <Accordion key={chapitre.id_chapitre}
+            preExpanded={openIndex === index ? [chapitre.id_chapitre.toString()] : []}  className="accordion-box" >
+                <AccordionItem className="accordion-item" uuid={chapitre.id_chapitre}>
+                    <AccordionItemHeading >
+                        <AccordionItemButton onClick={() => toggleChapitre(index)} >
+                            <button>{chapitre.nom_chapitre}</button>
                         </AccordionItemButton>
                     </AccordionItemHeading>
                     <AccordionItemPanel className="card-body acc-content current">
+                    {chapitre.activites && chapitre.activites.map((activite, index) => (
                         <div className="content">
                             <div className="clearfix">
-                                <ModalVideo channel='youtube' isOpen={isOpen} videoId='YLN1Argi7ik' onClose={() => { openModal(); }} />
+        
                                 <div className="pull-left">
-                                    <Link className="popup-videos play-icon" onClick={() => { openModal(); }}><i className="fa fa-play"></i>What is UI/ UX Design?</Link>
+                                    <button className="popup-videos play-icon" onClick={() => toggleActivite(index)}><i className="fa fa-play"></i>{activite.titre}</button>
                                 </div>
                                 <div className="pull-right">
-                                    <div className="minutes">35 Minutes</div>
+                                    <div className="minutes">{activite.duration} Minutes</div>
                                 </div>
+
+                                {openIndex === index && (
+                                            <div className='sous-activite'>
+                                                {activite.categorie && activite.categorie === "text" ?
+                                                    <div className='modal-activite-text-aff'>
+                                                        <p>{activite.contenu}</p>
+                                                    </div>
+                                                    : activite.categorie === "image" ?
+                                                        <div className='ext-modal'>
+                                                            <button className='btn-fermer-modal' onClick={()=>toggleActivite(null)} >
+                                                                <img width="24" height="24" src="https://img.icons8.com/quill/100/ff5421/x.png" alt="x"/> 
+                                                            </button>
+                                                            <div className='img-modal-ext'>
+                                                                <img src={`http://localhost:8800/api/image/${activite.contenu}`} alt="image" />
+                                                            </div>
+                                                        </div>
+                                                        : activite.categorie === "video" ?
+                                                            <div className='ext-modal'>
+                                                                <button className='btn-fermer-modal' onClick={()=>toggleActivite(null)} >
+                                                                    <img width="24" height="24" src="https://img.icons8.com/quill/100/ff5421/x.png" alt="x"/> 
+                                                                </button>
+                                                                <div className='img-modal-ext'>
+                                                                <video controls>
+                                                                    <source src={`http://localhost:8800/api/video/${activite.contenu}`} type="video/mp4" />
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                                </div>
+                                                            </div>
+                                                            : ""
+                                                }
+                                            </div>
+                                        )}
+                                    
                             </div>
                         </div>
-                        <div className="content">
-                            <div className="clearfix">
-                                <ModalVideo channel='youtube' isOpen={isOpen} videoId='YLN1Argi7ik' onClose={() => { openModal(); }} />
-                                <div className="pull-left">
-                                    <Link className="popup-videos play-icon" onClick={() => { openModal(); }}><i className="fa fa-play"></i>What is UI/ UX Design?</Link>
-                                </div>
-                                <div className="pull-right">
-                                    <div className="minutes">35 Minutes</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="content">
-                            <div className="clearfix">
-                                <ModalVideo channel='youtube' isOpen={isOpen} videoId='YLN1Argi7ik' onClose={() => { openModal(); }} />
-                                <div className="pull-left">
-                                    <Link className="popup-videos play-icon" onClick={() => { openModal(); }}><i className="fa fa-play"></i>What is UI/ UX Design?</Link>
-                                </div>
-                                <div className="pull-right">
-                                    <div className="minutes">35 Minutes</div>
-                                </div>
-                            </div>
-                        </div>
+                         ))}    
                     </AccordionItemPanel>
                 </AccordionItem>
-                <AccordionItem className="accordion-item" uuid="b">
-                    <AccordionItemHeading>
-                        <AccordionItemButton>
-                            <button>Color Theory</button>
-                        </AccordionItemButton>
-                    </AccordionItemHeading>
-                    <AccordionItemPanel className="card-body acc-content">
-                        <div className="content">
-                            <div className="clearfix">
-                                <ModalVideo channel='youtube' isOpen={isOpen} videoId='YLN1Argi7ik' onClose={() => { openModal(); }} />
-                                <div className="pull-left">
-                                    <Link className="popup-videos play-icon" onClick={() => { openModal(); }}><i className="fa fa-play"></i>What is UI/ UX Design?</Link>
-                                </div>
-                                <div className="pull-right">
-                                    <div className="minutes">35 Minutes</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="content">
-                            <div className="clearfix">
-                                <ModalVideo channel='youtube' isOpen={isOpen} videoId='YLN1Argi7ik' onClose={() => { openModal(); }} />
-                                <div className="pull-left">
-                                    <Link className="popup-videos play-icon" onClick={() => { openModal(); }}><i className="fa fa-play"></i>What is UI/ UX Design?</Link>
-                                </div>
-                                <div className="pull-right">
-                                    <div className="minutes">35 Minutes</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="content">
-                            <div className="clearfix">
-                                <ModalVideo channel='youtube' isOpen={isOpen} videoId='YLN1Argi7ik' onClose={() => { openModal(); }} />
-                                <div className="pull-left">
-                                    <Link className="popup-videos play-icon" onClick={() => { openModal(); }}><i className="fa fa-play"></i>What is UI/ UX Design?</Link>
-                                </div>
-                                <div className="pull-right">
-                                    <div className="minutes">35 Minutes</div>
-                                </div>
-                            </div>
-                        </div>
-                    </AccordionItemPanel>
-                </AccordionItem>
-                <AccordionItem className="accordion-item" uuid="c">
-                    <AccordionItemHeading>
-                        <AccordionItemButton>
-                            <button>Basic Typography</button>
-                        </AccordionItemButton>
-                    </AccordionItemHeading>
-                    <AccordionItemPanel className="card-body acc-content">
-                        <div className="content">
-                            <div className="clearfix">
-                                <ModalVideo channel='youtube' isOpen={isOpen} videoId='YLN1Argi7ik' onClose={() => { openModal(); }} />
-                                <div className="pull-left">
-                                    <Link className="popup-videos play-icon" onClick={() => { openModal(); }}><i className="fa fa-play"></i>What is UI/ UX Design?</Link>
-                                </div>
-                                <div className="pull-right">
-                                    <div className="minutes">35 Minutes</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="content">
-                            <div className="clearfix">
-                                <ModalVideo channel='youtube' isOpen={isOpen} videoId='YLN1Argi7ik' onClose={() => { openModal(); }} />
-                                <div className="pull-left">
-                                    <Link className="popup-videos play-icon" onClick={() => { openModal(); }}><i className="fa fa-play"></i>What is UI/ UX Design?</Link>
-                                </div>
-                                <div className="pull-right">
-                                    <div className="minutes">35 Minutes</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="content">
-                            <div className="clearfix">
-                                <ModalVideo channel='youtube' isOpen={isOpen} videoId='YLN1Argi7ik' onClose={() => { openModal(); }} />
-                                <div className="pull-left">
-                                    <Link className="popup-videos play-icon" onClick={() => { openModal(); }}><i className="fa fa-play"></i>What is UI/ UX Design?</Link>
-                                </div>
-                                <div className="pull-right">
-                                    <div className="minutes">35 Minutes</div>
-                                </div>
-                            </div>
-                        </div>
-                    </AccordionItemPanel>
-                </AccordionItem>
-            </Accordion>                                             
+                
+            </Accordion>   
+             ))}           
+                   
+                 
         </div>
     );
 }

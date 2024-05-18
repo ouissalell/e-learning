@@ -31,7 +31,8 @@ const CreateCours = () => {
         type:"",
         level: "",
         idUse:"",
-        image:null
+        image:null,
+        duration:null
     });
     const [err, setErr] = useState(null);
     const navigate = useNavigate();
@@ -52,7 +53,6 @@ const handleImageChange = (e) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         fetchid();
-        console.log(inputs.titre)
         try {
             const formData = new FormData();
             formData.append('titre', inputs.titre);
@@ -61,14 +61,17 @@ const handleImageChange = (e) => {
             formData.append('type', inputs.type);
             formData.append('level', inputs.level);
             formData.append('id_user', inputs.idUse); 
-            formData.append('image', inputs.image); 
+            formData.append('image', inputs.image);
+            formData.append('duration', inputs.duration); 
             // Effectuer la soumission du formulaire avec FormData
-            await axios.post("http://localhost:8800/api/cours/createCours", formData, {
+            const response = await axios.post("http://localhost:8800/api/cours/createCours", formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            toast.success('Événement créé avec succès', {
+            const newCourseId = response.data.coursId;
+            navigate(`/admin/createchapitre/${newCourseId}`)
+            toast.success('Cours créé avec succès', {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -77,6 +80,7 @@ const handleImageChange = (e) => {
                 draggable: true,
                 progress: undefined,
             });
+            
             // Réinitialiser les champs après la soumission réussie
             setInputs({
                 titre: "",
@@ -84,13 +88,14 @@ const handleImageChange = (e) => {
                 dateCre: "",
                 type:"",
                 level: "",
-                image:null
+                image:null,
+                duration:1
             });
         } catch (err) {
             if (err.response && err.response.data) {
                 toast.error(err.response.data);
             } else {
-                toast.error('Une erreur inattendue s\'est produite lors de la création de l\'événement.');
+                toast.error('Une erreur inattendue s\'est produite lors de la création de Cours.');
             }
         }
     };
@@ -117,7 +122,7 @@ const handleImageChange = (e) => {
             </Helmet>
             <OffWrap />
             <Header
-                parentMenu='pages'
+                parentMenu='course'
                 secondParentMenu='others'
                 headerNormalLogo={Logo}
                 headerStickyLogo={Logo}
@@ -173,7 +178,9 @@ const handleImageChange = (e) => {
                                     <div className="form-group col-lg-12">
                                         <input type="text" id="level" name="level" value={inputs.level} placeholder="Level" onChange={handleInputChange} required />
                                     </div>
-                                   
+                                    <div className="form-group col-lg-12">
+                                        <input type="number" id="duration" name="duration" value={inputs.duration} placeholder="duration par heur" onChange={handleInputChange} required />
+                                    </div>
                                     
                                     <div className="form-group col-lg-12 col-md-12 col-sm-12 text-center">
                                         <button type="submit" className="readon register-btn"><span className="txt">Create Cours</span></button>

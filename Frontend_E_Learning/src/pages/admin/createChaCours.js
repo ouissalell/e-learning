@@ -22,12 +22,16 @@ import bannerbg from '../../assets/img/breadcrumbs/inner7.jpg';
 
 const CreateChaCours = () => {
     const [openModal,setOpenModal]=useState(false);
+    const [openModalq,setOpenModalq]=useState(false);
     const [course, setCourse] = useState(null);
     const [chapitre, setChapitre] = useState(null);
+    const [quiz, setQuiz] = useState(null);
     const { id } = useParams();
     const { idUser } = useAuth();
     const [inputs, setInputs] = useState({
-        chapitre: ""
+        chapitre: "",
+        titreQuiz:"",
+        dureeQuiz:""
     });
     const [err, setErr] = useState(null);
     const navigate = useNavigate();
@@ -70,6 +74,39 @@ const handleInputChange = (e) => {
             }
         }
     };
+    const handleSubmitq = async (e) => {
+        e.preventDefault();
+        try {
+           
+            await axios.post("http://localhost:8800/api/quiz/createQuiz", {
+                titre : inputs.titreQuiz,
+                duree: inputs.dureeQuiz,
+                id_cours : course[0].id
+            });
+            toast.success('quiz créé avec succès', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            fetchChapitre();
+            setInputs({
+                titreQuiz : "",
+                dureeQuiz:""
+            });
+            fetchQuiz();
+            setOpenModalq(false);
+        } catch (err) {
+            if (err.response && err.response.data) {
+                toast.error(err.response.data);
+            } else {
+                toast.error('Une erreur inattendue s\'est produite lors de la création de quiz.');
+            }
+        }
+    };
     const fetchid = async () => {
         try { 
           
@@ -98,10 +135,21 @@ const handleInputChange = (e) => {
             console.error("Erreur lors de la récupération des événements :", error);
         }
     };
+
+    const fetchQuiz = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8800/api/quiz/getQuiz/${id}`);
+            setQuiz(response.data[0]);
+           console.log(response.data)
+        } catch (error) {
+            console.error("Erreur lors de la récupération des événements :", error);
+        }
+    };
     
     useEffect(() => {
         fetchChapitre();
         fetchCourse();
+        fetchQuiz();
         fetchid();
        
       }, [id]);
@@ -115,7 +163,7 @@ const handleInputChange = (e) => {
             </Helmet>
             <OffWrap />
             <Header
-                parentMenu='pages'
+                parentMenu='course'
                 secondParentMenu='others'
                 headerNormalLogo={Logo}
                 headerStickyLogo={Logo}
@@ -131,8 +179,8 @@ const handleInputChange = (e) => {
 
             {/* breadcrumb-area-start */}
             <SiteBreadcrumb
-                pageTitle=" Cours"
-                pageName="Create Cours"
+                pageTitle=" Chapitre"
+                pageName="Create Chapitre"
                 breadcrumbsImg={bannerbg}
             />
             {/* breadcrumb-area-End */}
@@ -153,7 +201,7 @@ const handleInputChange = (e) => {
                     <div class="notice-bord style1">
                     
                         <div>
-                            <h4 class="title">Chapitre Cours : <span style={{color:"black" , fontSize:"16px" , marginLeft:"10px"}}>{course && course[0].titre}</span></h4>
+                            <h4 class="title">les Chapitre  de Cours : <span style={{color:"black" , fontSize:"16px" , marginLeft:"10px"}}>{course && course[0].titre}</span></h4>
                         </div>
                         <div className='chap-f-b'>
 
@@ -180,8 +228,32 @@ const handleInputChange = (e) => {
                                  ))}
                             </ul>
                         </div>
+                        {quiz && <>
+                            <div>
+                            <h4 class="title">Quiz  de Cours : <span style={{color:"black" , fontSize:"16px" , marginLeft:"10px"}}>{course && course[0].titre}</span></h4>
+                        </div>
+                        
+                                    <div className='li-' style={{display:"flex"}}>
+                                        <div class="date">
+                                            <span>1</span>
+                                        </div>
+                                            <div class="desc"><a href={`/admin/createquestionq/${quiz.id}`}>{quiz.titre}</a></div>
+                                        <div className='ul-img-chap'>
+                                            <button>
+                                                <img width="20" height="20" src="https://img.icons8.com/pastel-glyph/64/1A1A1A/create-new--v2.png" alt="create-new--v2"/>
+                                            </button>
+                                            <button>
+                                            <img width="20" height="20" src="https://img.icons8.com/wired/64/f00000/filled-trash.png" alt="filled-trash"/>
+                                            </button>
+                                       
+                                        </div>
+                                    </div>
+                                
+                        </>}
+                        
                         <div class="form-group mb-0">
                             <button class="re-button" onClick={()=>setOpenModal(true)}>Ajouter Chapitre</button>
+                            {!quiz && <button class="re2-button" onClick={()=>setOpenModalq(true)}>Ajouter Quiz</button>}
                         </div>
                     </div>
                     </div>
@@ -202,6 +274,27 @@ const handleInputChange = (e) => {
                             <form id="" onSubmit={handleSubmit}>
                                     <div className="">
                                         <input type="text" id="chapitre" name="chapitre"  placeholder="Titre de Chapitre" value={inputs.titre} onChange={handleInputChange}  required />
+                                    </div>
+                                    <button>Submit</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div style={{display : openModalq ? "block" : "none"}} className='ext-modal'>   
+                        <div className='modal-add-chap'>
+                            <button className='btn-fermer-modal' onClick={()=>setOpenModalq(false)} >
+                                <img width="24" height="24" src="https://img.icons8.com/quill/100/ff5421/x.png" alt="x"/> 
+                            </button>
+                            <div className='titre-h2-modal'>
+                                <h2>Create Quiz</h2>
+                            </div>
+                            <div className='name-cours-chap'>
+                                <h5>Course : </h5><span>{course && course[0].titre}</span> 
+                            </div>
+                            <form id="" onSubmit={handleSubmitq}>
+                                    <div className="">
+                                        <input type="text" id="titreQuiz" name="titreQuiz"  placeholder="Titre de Quiz" value={inputs.titreQuiz} onChange={handleInputChange}  required />
+                                        <input type="text" id="quiz" name="dureeQuiz"  placeholder="durée de Quiz" value={inputs.dureeQuiz} onChange={handleInputChange}  required />
                                     </div>
                                     <button>Submit</button>
                             </form>

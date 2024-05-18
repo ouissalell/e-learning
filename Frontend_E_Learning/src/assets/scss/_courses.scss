@@ -88,6 +88,23 @@
                                 }
                             }
                         }
+                        button {
+                            padding: 5px 13px;
+                            background: $grayColor;
+                            border: 1px solid $primaryColor;
+                            display: inline-block;
+                            border-radius: 3px;
+                            color: $titleColor;
+                            
+                                border: 1px solid #f2f2f2;
+                                background: transparent;
+                            i {
+                                &:before {
+                                    font-size: 18px;
+                                    font-weight: 700;
+                                }
+                            }
+                        }
                     }
                 }
             }   
@@ -117,6 +134,7 @@
                                 color: $orangeColor;
                             }
                         }
+                        
                     }
                 }
                 &:hover{
@@ -462,6 +480,19 @@
                     .btn-part {
                         text-align: right;
                         a {
+                            color: $bodyColor;
+                            i {
+                                &:before {
+                                    font-size: 18px;
+                                    font-weight: 700;
+                                    padding-left: 10px;
+                                }
+                            }
+                            &:hover {
+                                color: $primaryColor;
+                            }
+                        }
+                        button {
                             color: $bodyColor;
                             i {
                                 &:before {
@@ -998,6 +1029,14 @@
                 .bottom-part {
                     .btn-part {
                         a {
+                            border: 1px solid #f2f2f2;
+                            background: transparent;
+                            &:hover {
+                                background: $orangeColor;
+                                color: $whiteColor;
+                            }
+                        }
+                        button {
                             border: 1px solid #f2f2f2;
                             background: transparent;
                             &:hover {

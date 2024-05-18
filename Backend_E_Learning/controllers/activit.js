@@ -36,15 +36,15 @@ export const createActivitei = (req, res) => {
             return res.status(500).json("Une erreur inattendue s'est produite lors du téléchargement de l'image.");
         }
 
-        const { titre, categorie,id_chapitre  } = req.body;
+        const { titre, categorie,id_chapitre,duration  } = req.body;
         const imageName = req.file.filename; // Nom de l'image téléchargée
 
-        if (  !titre || !categorie  || !id_chapitre || !imageName) {
+        if (  !titre || !categorie  || !id_chapitre || !imageName||!duration) {
             return res.status(400).json("Tous les champs sont requis.");
         }
 
-        const insertCoursQuery = "INSERT INTO activite (titre, categorie, contenu, id_chapitre) VALUES (?, ?, ?, ?)";
-        const values = [titre, categorie, imageName, id_chapitre ];
+        const insertCoursQuery = "INSERT INTO activite (titre, categorie, contenu,duration, id_chapitre) VALUES (?,?, ?, ?, ?)";
+        const values = [titre, categorie, imageName,duration, id_chapitre ];
 
         db.query(insertCoursQuery, values, (err, data) => {
             if (err) {
@@ -66,16 +66,16 @@ export const createActivitei = (req, res) => {
 
 
 export const createActivite = (req, res) => {
-    const { titre, categorie,contenu,id_chapitre } = req.body;
+    const { titre, categorie,contenu,duration,id_chapitre } = req.body;
 
     // Vérifier si tous les champs sont fournis
-    if (!titre || !categorie || !contenu || !id_chapitre) {
+    if (!titre || !categorie || !contenu ||!duration|| !id_chapitre) {
         return res.status(400).json("Tous les champs sont requis.");
     }
 
     // Insérer le chapitre dans la base de données
-    const insertActiviteQuery = "INSERT INTO activite (titre, categorie, contenu, id_chapitre) VALUES (?, ?, ?, ?)";
-    const values = [titre, categorie, contenu, id_chapitre];
+    const insertActiviteQuery = "INSERT INTO activite (titre, categorie, contenu, duration,id_chapitre) VALUES (?, ?, ?, ?,?)";
+    const values = [titre, categorie, contenu,duration, id_chapitre];
 
     db.query(insertActiviteQuery, values, (err, data) => {
         if (err) {
@@ -122,15 +122,15 @@ const storagev = multer.diskStorage({
               return res.status(500).json("Une erreur inattendue s'est produite lors du téléchargement de la vidéo.");
           }
   
-          const { titre, categorie, id_chapitre } = req.body;
+          const { titre, categorie, id_chapitre, duration } = req.body;
           const videoName = req.file.filename; // Nom de la vidéo téléchargée
   
-          if (!titre || !categorie || !id_chapitre || !videoName) {
+          if (!titre || !categorie || !id_chapitre || !videoName || !duration) {
               return res.status(400).json("Tous les champs sont requis.");
           }
   
-          const insertCoursQuery = "INSERT INTO activite (titre, categorie, contenu, id_chapitre) VALUES (?, ?, ?, ?)";
-          const values = [titre, categorie, videoName, id_chapitre];
+          const insertCoursQuery = "INSERT INTO activite (titre, categorie, contenu, duration, id_chapitre) VALUES (?, ?, ?,? , ?)";
+          const values = [titre, categorie, videoName,duration, id_chapitre];
   
           db.query(insertCoursQuery, values, (err, data) => {
               if (err) {

@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React ,{useContext, useEffect, useState } from 'react';
+import { Link,useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { useAuth } from '../../../context/authContext'; 
 import MenuItems from './MenuItems';
 import RSMobileMenu from './RSMobileMenu';
 import CanvasMenu from './CanvasMenu';
@@ -38,6 +40,40 @@ const Header = (props) => {
 	const canvasMenuAdd = () => {
 		document.body.classList.add('nav-expanded');
 	};
+
+
+    const navigate = useNavigate();
+    const [nam,setName]=useState("");
+    const { name } = useAuth();
+    const fetchName = async () => {
+        try {
+          const userName = await name(); 
+          console.log("name de l'utilisateur:", userName);
+          setName(userName);
+        } catch (error) {
+          console.error("Erreur lors de la récupération du rôle:", error);
+        }
+      };
+    useEffect(() => {
+        
+    
+        fetchName();
+      }, []);
+      const handleLogout = async (e) => {
+        e.preventDefault();
+        try {
+          // Appel de l'API pour se déconnecter
+          const response = await axios.post('http://localhost:8800/api/auth/logout');
+          if (response.status === 200) {
+            localStorage.removeItem('access_token');
+            navigate("/");
+          } else {
+            console.error('Erreur lors de la déconnexion :', response.data);
+          }
+        } catch (error) {
+          console.error('Erreur lors de la déconnexion :', error);
+        }
+      };
 
 	return (
 		<React.Fragment>
@@ -90,52 +126,13 @@ const Header = (props) => {
 													<i className="flaticon-search"></i>
 												</Link>
 											</li>
-											<li className="user-icon cart-inner no-border mini-cart-active">
-												<Link to="#"><i className="fa fa-shopping-bag"></i></Link>
-												<div className="woocommerce-mini-cart text-left">
-													<div className="cart-bottom-part">
-														<ul className="cart-icon-product-list">
-															<li className="display-flex">
-																<div className="icon-cart">
-																	<Link to="#"><i className="fa fa-times"></i></Link>
-																</div>
-																<div className="product-info">
-																	<Link to="/shop/cart">Law Book</Link><br />
-																	<span className="quantity">1 × $30.00</span>
-																</div>
-																<div className="product-image">
-																	<Link to="/shop/cart"><img src={productImg1} alt="Product Image" /></Link>
-																</div>
-															</li>
-															<li className="display-flex">
-																<div className="icon-cart">
-																	<Link to="#"><i className="fa fa-times"></i></Link>
-																</div>
-																<div className="product-info">
-																	<Link to="/shop/cart">Spirit Level</Link><br />
-																	<span className="quantity">1 × $30.00</span>
-																</div>
-																<div className="product-image">
-																	<Link to="/shop/cart"><img src={productImg2} alt="Product Image" /></Link>
-																</div>
-															</li>
-														</ul>
-
-														<div className="total-price text-center">
-															<span className="subtotal">Subtotal:</span>
-															<span className="current-price">$85.00</span>
-														</div>
-
-														<div className="cart-btn text-center">
-															<Link className="crt-btn btn1" to="/shop/cart">View Cart</Link>
-															<Link className="crt-btn btn2" to="/shop/checkout">Check Out</Link>
-														</div>
-													</div>
-												</div>
-											</li>
+											{nam ?<>
 											<li className="user-icon last-icon hidden-lg">
 												<Link to="/shop/my-account"><i className="fa fa-user-o" aria-hidden="true"></i></Link>
 											</li>
+											</>  : <>
+											<Link style={{color:"#ffff"}} to="/login">Login</Link>   </>}
+											
 											<li>
 												<a onClick={canvasMenuAdd} id="nav-expander" className="nav-expander" href="#">
 													<span className="dot1"></span>

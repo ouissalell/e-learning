@@ -54,7 +54,7 @@ const handleImageChange = (e) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         fetchid();
-        
+        console.log(inputs.image);
         try {
             const formData = new FormData();
             formData.append('titre', inputs.titre);
@@ -68,6 +68,7 @@ const handleImageChange = (e) => {
             formData.append('ville', inputs.ville); 
             formData.append('categorie', inputs.categorie); 
             // Effectuer la soumission du formulaire avec FormData
+            console.log(formData);
             await axios.post("http://localhost:8800/api/event/createEvent", formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -96,7 +97,7 @@ const handleImageChange = (e) => {
             });
         } catch (err) {
             if (err.response && err.response.data) {
-                toast.error(inputs.idUse);
+                toast.error(err.response.data);
             } else {
                 toast.error('Une erreur inattendue s\'est produite lors de la création de l\'événement.');
             }
@@ -125,7 +126,7 @@ const handleImageChange = (e) => {
             </Helmet>
             <OffWrap />
             <Header
-                parentMenu='pages'
+                parentMenu='event'
                 secondParentMenu='others'
                 headerNormalLogo={Logo}
                 headerStickyLogo={Logo}
