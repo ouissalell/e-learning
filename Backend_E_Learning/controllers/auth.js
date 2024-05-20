@@ -77,3 +77,49 @@ export const logout = (req, res) => {
   // Déconnexion de l'utilisateur et suppression du cookie du token
   res.clearCookie("access_token").status(200).json("User has been logged out.");
 };
+
+export const checkUserRole = (req, res) => {
+  const userId = req.params.id; // Récupérer l'ID de l'utilisateur à partir des paramètres de la requête
+
+  // Requête pour récupérer le rôle de l'utilisateur à partir de son ID
+  const selectUserRoleQuery = "SELECT role FROM users WHERE id = ?";
+
+  db.query(selectUserRoleQuery, userId, (err, data) => {
+      if (err) {
+          console.error("Erreur lors de la récupération du rôle de l'utilisateur :", err);
+          return res.status(500).json("Une erreur s'est produite lors de la récupération du rôle de l'utilisateur.");
+      }
+
+      if (data.length === 0) {
+          return res.status(404).json("Utilisateur non trouvé.");
+      }
+
+      const userRole = data[0].role; // Récupérer le rôle de l'utilisateur à partir des résultats de la requête
+
+      // Retourner le rôle de l'utilisateur dans la réponse
+      return res.status(200).json({ role: userRole });
+  });
+};
+
+export const checkUserRoleA = (req, res) => {
+  const userId = req.params.id; // Récupérer l'ID de l'utilisateur à partir des paramètres de la requête
+
+  // Requête pour récupérer le rôle de l'utilisateur à partir de son ID
+  const selectUserRoleQuery = "SELECT role FROM admins WHERE id = ?";
+
+  db.query(selectUserRoleQuery, userId, (err, data) => {
+      if (err) {
+          console.error("Erreur lors de la récupération du rôle de l'admin :", err);
+          return res.status(500).json("Une erreur s'est produite lors de la récupération du rôle de l'admin.");
+      }
+
+      if (data.length === 0) {
+          return res.status(404).json("Utilisateur non trouvé.");
+      }
+
+      const userRole = data[0].role; // Récupérer le rôle de l'utilisateur à partir des résultats de la requête
+
+      // Retourner le rôle de l'utilisateur dans la réponse
+      return res.status(200).json({ role: userRole });
+  });
+};

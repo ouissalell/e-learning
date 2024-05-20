@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CourseSidebar from './CourseSidebar';
 import CourseDetailsTab from './CourseDetailsTab';
 
 const CourseDetailsPart = () => {
+    const {i,seti}=useState(0);
 
     return (
         <React.Fragment>
@@ -10,10 +11,10 @@ const CourseDetailsPart = () => {
                 <div className="container">
                     <div className="row clearfix">
                         <div className="col-lg-8 md-mb-50">
-                            <CourseDetailsTab />
+                            <CourseDetailsTab  />
                         </div>
                         <div className="video-column col-lg-4">
-                            <CourseSidebar />
+                            <CourseSidebar  />
                         </div>
                     </div>
                 </div>

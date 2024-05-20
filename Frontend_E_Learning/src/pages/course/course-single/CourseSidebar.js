@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ModalVideo from 'react-modal-video';
 import { Link,useParams } from 'react-router-dom';
+import { useAuth } from '../../../context/authContext'; 
 
 // Image
 import videoImg from '../../../assets/img/about/about-video-bg2.png';
@@ -10,11 +11,27 @@ const CourseSidebar = () => {
     const { id } = useParams();
     const [courses, setCourses] = useState([]);
     const [edu, setEdu] = useState();
-    const [complete,setComplete]=useState(10)
+    const [complete,setComplete]=useState(0)
+    const { idUser } = useAuth();
     useEffect(() => {
         fetchCourses();
         fetchEdu();
+        fetchDataC();
     }, []);
+
+        const fetchDataC = async () => {
+            const userid = await idUser();
+            try {
+                const response = await axios.get(`http://localhost:8800/api/avc/avc/${id}/${userid}`);
+                setComplete(response.data.avc);
+            } catch (error) {
+                console.error('Error fetching AVC data:', error);
+            }
+            
+        };
+
+        
+
 
     const fetchCourses = async () => {
         try {
@@ -101,7 +118,7 @@ const CourseSidebar = () => {
                 <div class="px-5 pb-5">
                     
                     <div class="w-full bg-zinc-200 dark:bg-zinc-700 rounded-full h-2-5">
-                        <div class="bg-blue-600 h-2-8 rounded-full"> <div className={`bg-blue-600 h-${complete} rounded-full`}></div></div>
+                        <div class="bg-blue-600 h-2-8 rounded-full"> <div style={{ width: complete ? `${complete}%` : "0%" }} className={`bg-blue-600 h- rounded-full`}></div></div>
                     </div>
                     <div class="flex justify-between items-center mt-3">
                     <span class="text-sm text-zinc-600 dark:text-zinc-400">{complete}% Complete</span>

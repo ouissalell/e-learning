@@ -98,7 +98,8 @@
             text-align:center;
             width: 20%;
             display: inline-block;
-            button{
+           
+            button {
                 position:relative;
                 display:block;
                 width: 100%;
@@ -113,6 +114,7 @@
                 text-transform:capitalize;
                 transition:all 500ms ease;                
             }
+            
             &:hover,
             &.react-tabs__tab--selected{
                 button {
@@ -312,6 +314,9 @@
 
 @media #{$lg} {
     .intro-section .intro-tabs .react-tabs__tab button {
+        padding: 12px 10px 10px;
+    }
+    .intro-section .intro-tabs .react-tabs__tab div {
         padding: 12px 10px 10px;
     }
     .btn {

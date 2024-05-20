@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link , useNavigate } from 'react-router-dom';
 import axios from "axios";
@@ -11,7 +11,7 @@ import ScrollToTop from '../../components/Common/ScrollTop';
 import OffWrap from '../../components/Layout/Header/OffWrap';
 import SiteBreadcrumb from '../../components/Common/Breadcumb';
 import SearchModal from '../../components/Layout/Header/SearchModal';
-
+import { useAuth } from '../../context/authContext'; 
 
 // Image
 import favIcon from '../../assets/img/fav-orange.png';
@@ -21,7 +21,7 @@ import footerLogo from '../../assets/img/logo/lite-logo.png';
 import bannerbg from '../../assets/img/breadcrumbs/inner7.jpg';
 
 const CreateEns = () => {
-
+    const { idUser } = useAuth();
     const [inputs, setInputs] = useState({
         username: "",
         email: "",
@@ -31,6 +31,26 @@ const CreateEns = () => {
     const [err, setErr] = useState(null); 
 
     const navigate = useNavigate();
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const userId = await idUser(); // Récupérer l'ID de l'utilisateur à partir du contexte d'authentification
+                const response = await axios.get(`http://localhost:8800/api/auth/checkUserRoleA/${userId}`);
+                const userRole = response.data.role;
+
+                // Vérifier le rôle de l'utilisateur et agir en conséquence
+                if (userRole !== 'admin') {
+                    // Rediriger l'utilisateur non administrateur vers une autre page ou afficher un message d'erreur
+                    navigate('/404'); // Exemple de redirection vers la page d'accueil
+                }
+            } catch (error) {
+                console.error("Erreur lors de la récupération du rôle de l'utilisateur :", error);
+                // Afficher un message d'erreur ou rediriger vers une autre page en cas d'erreur
+            }
+        };
+
+        fetchUserData(); // Appel de la fonction pour récupérer et vérifier le rôle de l'utilisateur
+    }, [idUser, navigate]);
 
     const handleChange = (e) => {
         setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -117,10 +137,10 @@ const CreateEns = () => {
                                     </div>
                                     
                                     <div className="form-group col-lg-12">
-                                        <input type="text" id="puser" name="password" value={inputs.password} placeholder="Password" onChange={handleChange} required />
+                                        <input type="password" id="puser" name="password" value={inputs.password} placeholder="Password" onChange={handleChange} required />
                                     </div>
                                     <div className="form-group col-lg-12">
-                                        <input type="text" id="Confirm" name="confirmPassword" value={inputs.confirmPassword} placeholder="Confirm Password" onChange={handleChange} required />
+                                        <input type="password" id="Confirm" name="confirmPassword" value={inputs.confirmPassword} placeholder="Confirm Password" onChange={handleChange} required />
                                     </div>
                                     <div className="form-group col-lg-12 col-md-12 col-sm-12">
                                         <div className="row clearfix">

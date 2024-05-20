@@ -23,10 +23,32 @@ import eventImg1 from '../../assets/img/event/home12/1.jpg';
 import eventImg2 from '../../assets/img/event/home12/2.jpg';
 import eventImg3 from '../../assets/img/event/home12/3.jpg';
 import eventImg4 from '../../assets/img/event/home12/4.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const Event = () => {
     const { idUser } = useAuth();
     const [events, setEvents] = useState([]);
+    const navigate = useNavigate();
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const userId = await idUser(); // Récupérer l'ID de l'utilisateur à partir du contexte d'authentification
+                const response = await axios.get(`http://localhost:8800/api/auth/checkUserRole/${userId}`);
+                const userRole = response.data.role;
+
+                // Vérifier le rôle de l'utilisateur et agir en conséquence
+                if (userRole !== 'enseignant') {
+                    // Rediriger l'utilisateur non administrateur vers une autre page ou afficher un message d'erreur
+                    navigate('/404'); // Exemple de redirection vers la page d'accueil
+                }
+            } catch (error) {
+                console.error("Erreur lors de la récupération du rôle de l'utilisateur :", error);
+                // Afficher un message d'erreur ou rediriger vers une autre page en cas d'erreur
+            }
+        };
+
+        fetchUserData(); // Appel de la fonction pour récupérer et vérifier le rôle de l'utilisateur
+    }, [idUser, navigate]);
 
     useEffect(() => {
         fetchEvents();
@@ -65,8 +87,8 @@ const Event = () => {
 
             {/* breadcrumb-area-start */}
             <SiteBreadcrumb
-                pageTitle="Event One"
-                pageName="Event"
+                pageTitle="My Event "
+                pageName="My Event"
                 breadcrumbsImg={bannerbg}
             />
             {/* breadcrumb-area-End */}

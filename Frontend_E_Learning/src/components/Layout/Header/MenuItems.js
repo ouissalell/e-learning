@@ -1,4 +1,4 @@
-import React ,{useContext, useEffect, useState } from 'react';
+import React ,{ useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/authContext'; 
 
@@ -32,7 +32,7 @@ const MenuItems = (props) => {
             
             <li className={parentMenu === 'course' ? 'menu-item-has-children current-menu-item' : 'menu-item-has-children'}>
             <Link to="/course" as="#">Courses</Link>
-                {rol && (rol === 'admin' || rol === 'enseignant') && (
+                {rol && ( rol === 'enseignant') && (
                     <ul className="sub-menu">
                         <li>
                             <Link to="/admin/mycours" className={location.pathname === "/admin/mycours" ? "active-menu" : ""}>My Courses</Link>
@@ -48,7 +48,7 @@ const MenuItems = (props) => {
             
             <li className={parentMenu === 'event' ? 'menu-item-has-children current-menu-item' : 'menu-item-has-children'}>
                 <Link to="/event">Evenement</Link>
-                {rol && (rol === 'admin' || rol === 'enseignant') && (
+                {rol && ( rol === 'enseignant') && (
                     <ul className="sub-menu">
                         <li>
                             <Link to="/admin/myevent" className={location.pathname === "/admin/myevent" ? "active-menu" : ""}>My Event</Link>

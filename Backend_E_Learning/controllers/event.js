@@ -127,3 +127,35 @@ export const getAllEventsId = (req, res) => {
   });
 };
 
+
+
+export const getLatestEvents = (req, res) => {
+  // Requête pour récupérer les trois derniers événements
+  const selectLatestEventsQuery = `
+      SELECT evenement.*, users.role
+      FROM evenement
+      JOIN users ON evenement.iduser = users.id
+      ORDER BY evenement.datedebut DESC
+      LIMIT 3;
+  `;
+
+  db.query(selectLatestEventsQuery, (err, data) => {
+      if (err) {
+          console.error("Erreur lors de la récupération des trois derniers événements :", err);
+          return res.status(500).json("Une erreur s'est produite lors de la récupération des trois derniers événements.");
+      }
+
+      // Convertir les objets Date en chaînes de caractères au format "aaaa-mm-jj"
+      const eventsWithFormattedDates = data.map(event => {
+          // Convertir les dates en chaînes de caractères au format "aaaa-mm-jj"
+          const formattedEvent = {
+              ...event,
+              datedebut: event.datedebut.toISOString().split('T')[0], // Convertir la date de début en chaîne au format "aaaa-mm-jj"
+              datefin: event.datefin.toISOString().split('T')[0], // Convertir la date de fin en chaîne au format "aaaa-mm-jj"
+          };
+          return formattedEvent;
+      });
+
+      return res.status(200).json(eventsWithFormattedDates); // Renvoyer les événements avec les dates formatées en tant que réponse
+  });
+};

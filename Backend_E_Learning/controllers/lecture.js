@@ -52,3 +52,23 @@ export const getLectureCours = (req, res) => {
         return res.status(200).json(lectureCount);
     });
 };
+
+export const getTop6CoursesByLecture = (req, res) => {
+    const selectTopCoursesQuery = `
+    SELECT cours.id AS id_cours, cours.titre, cours.image, 
+    COUNT(DISTINCT chapitre.id_chapitre) AS chapterCount, 
+    COUNT(DISTINCT lecture.id_cours) AS lectureCount 
+    FROM cours LEFT JOIN chapitre ON cours.id = chapitre.id_cours 
+    LEFT JOIN lecture ON cours.id = lecture.id_cours 
+    GROUP BY cours.id ORDER BY lectureCount DESC LIMIT 6`;
+
+    db.query(selectTopCoursesQuery, (err, results) => {
+        if (err) {
+            console.error("Erreur lors de la récupération des cours les plus populaires :", err);
+            return res.status(500).json("Une erreur s'est produite lors de la récupération des cours les plus populaires.");
+        }
+
+        // Renvoyer les résultats contenant les 6 cours les plus populaires avec leurs détails
+        return res.status(200).json(results);
+    });
+};

@@ -125,7 +125,7 @@ const App = () => {
                     <Route path="/contact-2" element={<ContactTwo/>} />
                     <Route path="/contact-3" element={<ContactThree/>} />
                     <Route path="/contact-4" element={<ContactFour/>} />
-                    <Route element={<Error/>} />
+                    <Route path="/404" element={<Error/>} />
                     <Route path="/admin/createns" element={<CreateEns/>} />
                     <Route path="/admin/createvt" element={<CreateEvt/>} />
                     <Route path="/admin/myevent" element={<Event/>} />

@@ -87,9 +87,9 @@ const Categories = () => {
                         />
                     </div>
                 </div>
-                <div className="text-center">
+                {/* <div className="text-center">
                     <Link className="readon orange-btn main-home" to="/course-categories">View All categories </Link>
-                </div>
+                </div> */}
             </div>
         </div>
     );
