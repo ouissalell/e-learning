@@ -128,7 +128,7 @@ const Header = (props) => {
 											</li>
 											{nam ?<>
 											<li className="user-icon last-icon hidden-lg">
-												<Link to="/shop/my-account"><i className="fa fa-user-o" aria-hidden="true"></i></Link>
+												<Link to="#"><i className="fa fa-user-o" aria-hidden="true"></i></Link>
 											</li>
 											</>  : <>
 											<Link style={{color:"#ffff"}} to="/login">Login</Link>   </>}

@@ -123,3 +123,35 @@ export const checkUserRoleA = (req, res) => {
       return res.status(200).json({ role: userRole });
   });
 };
+
+export const countUsers = (req, res) => {
+  // Requête pour compter les utilisateurs ayant le rôle 'user'
+  const countUsersQuery = "SELECT COUNT(*) as userCount FROM users WHERE role = 'user'";
+
+  db.query(countUsersQuery, (err, data) => {
+    if (err) {
+      console.error("Erreur lors de la récupération du nombre d'utilisateurs :", err);
+      return res.status(500).json("Une erreur s'est produite lors de la récupération du nombre d'utilisateurs.");
+    }
+
+    const userCount = data[0].userCount; // Récupérer le nombre d'utilisateurs à partir des résultats de la requête
+
+    // Retourner le nombre d'utilisateurs dans la réponse
+    return res.status(200).json({ userCount });
+  });
+};
+
+export const getLatestTeachers = (req, res) => {
+  // Requête pour obtenir les 6 derniers utilisateurs ayant le rôle 'enseignant'
+  const latestTeachersQuery = "SELECT * FROM users WHERE role = 'enseignant' ORDER BY id DESC LIMIT 6";
+
+  db.query(latestTeachersQuery, (err, data) => {
+    if (err) {
+      console.error("Erreur lors de la récupération des derniers enseignants :", err);
+      return res.status(500).json("Une erreur s'est produite lors de la récupération des derniers enseignants.");
+    }
+
+    // Retourner les derniers enseignants dans la réponse
+    return res.status(200).json(data);
+  });
+};

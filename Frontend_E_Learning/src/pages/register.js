@@ -98,10 +98,10 @@ const Register = () => {
                                     </div>
                                     
                                     <div className="form-group col-lg-12">
-                                        <input type="text" id="puser" name="password" value={inputs.password} placeholder="Password" onChange={handleChange} required />
+                                        <input type="password" id="puser" name="password" value={inputs.password} placeholder="Password" onChange={handleChange} required />
                                     </div>
                                     <div className="form-group col-lg-12">
-                                        <input type="text" id="Confirm" name="confirmPassword" value={inputs.confirmPassword} placeholder="Confirm Password" onChange={handleChange} required />
+                                        <input type="password" id="Confirm" name="confirmPassword" value={inputs.confirmPassword} placeholder="Confirm Password" onChange={handleChange} required />
                                     </div>
                                     <div className="form-group col-lg-12 col-md-12 col-sm-12">
                                         <div className="row clearfix">
