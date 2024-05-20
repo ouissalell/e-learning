@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Slider from "react-slick";
 import SectionTitle from '../../components/Common/SectionTitle';
 import SingleTestimonialThree from '../../components/Testimonial/SingleTestimonialThree';
-
+import { useAuth } from '../../context/authContext'; 
+import axios from 'axios';
+import '../../assets/scss/style.scss';
 
 // Testimonial Avatars
 import author1 from '../../assets/img/testimonial/style3/1.png';
@@ -12,6 +14,11 @@ import author4 from '../../assets/img/testimonial/style3/4.png';
 import author5 from '../../assets/img/testimonial/style3/5.png';
 
 const Testimonial = () => {
+    const { idUser } = useAuth();
+    const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState('');
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
     const testimonialSettings = {
         dots: true,
@@ -31,6 +38,45 @@ const Testimonial = () => {
         ]
     };
 
+    useEffect(() => {
+        fetchComments();
+    }, []);
+
+    const fetchComments = async () => {
+        try {
+            const response = await axios.get('http://localhost:8800/api/commentaire/getComments');
+            setComments(response.data);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des commentaires :', error);
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const userid = await idUser();
+        // Vérification si le commentaire est vide
+        if (!newComment.trim()) {
+            setError('Le commentaire ne peut pas être vide.');
+            return;
+        }
+
+        try {
+            const response = await axios.post('http://localhost:8800/api/commentaire/createComment', {
+                iduser: userid,
+                commentaire: newComment
+            });
+
+            if (response.status === 200) {
+                setSuccess('Le commentaire a été créé avec succès.');
+                setNewComment(''); // Effacer le champ de commentaire après la soumission réussie
+                fetchComments(); // Rafraîchir la liste des commentaires
+            }
+        } catch (error) {
+            console.error('Erreur lors de la création du commentaire :', error);
+            setError('Une erreur s\'est produite lors de la création du commentaire.');
+        }
+    };
+
     return (
         <React.Fragment>
             <div className="rs-testimonial style3 orange-color pt-102 md-pt-70 pb-60">
@@ -44,43 +90,34 @@ const Testimonial = () => {
                     />
                     <div className="row">
                         <Slider {...testimonialSettings}>
+                        {comments.map((comment, index) => (
                             <SingleTestimonialThree
-                                itemClass="testi-item"
-                                authorImage={author1}
-                                Title="David Warner"
-                                Designation="Web Developer"
-                                Description="Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway."
+                            key={comment.id}
+                            itemClass="testi-item"
+                            authorImage={index % 5 === 0 ? author1 : index % 5 === 1 ? author2 : index % 5 === 2 ? author3 : index % 5 === 3 ? author4 : author5}
+                            Title={comment.username}
+                            Designation={comment.role}
+                            Description={comment.commentaire}
                             />
-                            <SingleTestimonialThree
-                                itemClass="testi-item"
-                                authorImage={author2}
-                                Title="Mitchel Starc"
-                                Designation="App Developer"
-                                Description="Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway."
-                            />
-                            <SingleTestimonialThree
-                                itemClass="testi-item"
-                                authorImage={author3}
-                                Title="Steve Smith"
-                                Designation="Web Designer"
-                                Description="Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway."
-                            />
-                            <SingleTestimonialThree
-                                itemClass="testi-item"
-                                authorImage={author4}
-                                Title="Bret Lee"
-                                Designation="Client Manager"
-                                Description="Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway."
-                            />
-                            <SingleTestimonialThree
-                                itemClass="testi-item"
-                                authorImage={author5}
-                                Title="Shan Warne"
-                                Designation="Digital Marketar"
-                                Description="Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway."
-                            />
+                        ))}
+                            
                         </Slider>
                     </div>
+                    <div className='contact-widget'>
+                    <div className="form-control">
+                        <form onSubmit={handleSubmit}>
+                            <textarea
+                                value={newComment}
+                                onChange={(e) => setNewComment(e.target.value)}
+                                placeholder="Votre commentaire"
+                            ></textarea>
+                            {error && <p className="error">{error}</p>}
+                            {success && <p className="success">{success}</p>}
+                            <button  type="submit">Envoyer</button>
+                        </form>
+                    </div>
+                    </div>
+                    
                 </div>
             </div>
         </React.Fragment>

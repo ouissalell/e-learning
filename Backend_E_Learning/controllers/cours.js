@@ -112,7 +112,7 @@ export const getUserNameByCourseId = (req, res) => {
     // Requête SQL pour récupérer le nom de l'utilisateur associé à un cours
     const query = `
     SELECT Users.username FROM
-     Cours JOIN Users ON Cours.id_user = Users.id WHERE Cours.id = 2;
+     Cours JOIN Users ON Cours.id_user = Users.id WHERE Cours.id = ?;
     `;
 
     db.query(query, [id_cours], (err, data) => {
@@ -127,5 +127,29 @@ export const getUserNameByCourseId = (req, res) => {
 
         const userName = data[0]; // Récupérer le nom de l'utilisateur
         return res.status(200).json(userName.username);
+    });
+};
+
+export const getUserIdByCourseId = (req, res) => {
+    const id_cours = req.params.id; // ID du cours passé en paramètre
+
+    // Requête SQL pour récupérer le nom de l'utilisateur associé à un cours
+    const query = `
+    SELECT Users.id FROM
+     Cours JOIN Users ON Cours.id_user = Users.id WHERE Cours.id = ?;
+    `;
+
+    db.query(query, [id_cours], (err, data) => {
+        if (err) {
+            console.error("Erreur lors de la récupération du nom de l'utilisateur :", err);
+            return res.status(500).json("Une erreur s'est produite lors de la récupération du nom de l'utilisateur.");
+        }
+
+        if (data.length === 0) {
+            return res.status(404).json("Aucun utilisateur trouvé pour cet ID de cours.");
+        }
+
+        const userName = data[0]; // Récupérer le nom de l'utilisateur
+        return res.status(200).json(userName.id);
     });
 };

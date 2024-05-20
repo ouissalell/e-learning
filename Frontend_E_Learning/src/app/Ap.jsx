@@ -63,6 +63,8 @@ import CreateCours from '../pages/admin/createCours';
 import CreateChaCours from '../pages/admin/createChaCours';
 import CreateActivite from '../pages/admin/CreateActivite';
 import CreateQuestionQuiz from '../pages/admin/createQuestionQuiz';
+import Commentaire from '../pages/Commentaire/Commentaire';
+
 
 const App = () => {
     return (
@@ -137,6 +139,8 @@ const App = () => {
                     <Route path="/admin/createactivite/:id" exact element={<CreateActivite/>} />
                     <Route path="/course/course/:id" element={<CourseSingle/>} />
                     <Route path="/admin/createquestionq/:id" element={<CreateQuestionQuiz/>}/>
+                    <Route path="/commentaire" element={<Commentaire/>}/>
+                    
                     
                 </Routes>
                 </AuthContextProvider>

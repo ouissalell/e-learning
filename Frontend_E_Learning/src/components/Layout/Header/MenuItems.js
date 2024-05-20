@@ -84,6 +84,7 @@ const MenuItems = (props) => {
                     Contact
                 </Link>
             </li>
+            
         </React.Fragment>
     );
 }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../../../context/authContext';
+import jsPDF from 'jspdf';
 import '../../../assets/scss/modal.scss';
 
 const FaqPart = () => {
@@ -10,11 +11,12 @@ const FaqPart = () => {
     const [quiz, setQuiz] = useState([]);
     const [numberQ, setNumberQ] = useState(1);
     const [question, setQuestion] = useState({});
-    const [countdown, setCountdown] = useState(30 * 60); // 30 minutes en secondes
+    const [countdown, setCountdown] = useState(30 * 60);
     const [timerExpired, setTimerExpired] = useState(false);
     const [selectedResponse, setSelectedResponse] = useState("?");
     const [score, setScore] = useState(null);
     const [idQuiz, setIdQuiz] = useState(null);
+    const [certificateAvailable, setCertificateAvailable] = useState(false); 
 
     const fetchQuiz = async () => {
         const userid = await idUser();
@@ -32,6 +34,9 @@ const FaqPart = () => {
                     try {
                         const response = await axios.get(`http://localhost:8800/api/repense/getQuizScore/${idq}/${userid}`);
                         setScore(response.data);
+                        if (response.data) {
+                            setCertificateAvailable(true);
+                        }
                     } catch (error) {
                         console.error("Erreur lors de la récupération du score du quiz :", error);
                     }
@@ -49,6 +54,7 @@ const FaqPart = () => {
         try {
             await axios.delete(`http://localhost:8800/api/repense/deleteResponsesByQuizAndUser/${idQuiz}/${userid}`);
             setScore(null);
+            setCertificateAvailable(false); 
             fetchQuiz();
         } catch (error) {
             console.error("Erreur lors de la suppression des réponses :", error);
@@ -61,12 +67,10 @@ const FaqPart = () => {
             setCountdown((prevCountdown) => prevCountdown - 1);
         }, 1000);
 
-        // Effacer l'intervalle lorsque le composant est démonté
         return () => clearInterval(interval);
     }, []);
 
     useEffect(() => {
-        // Vérifier si le compte à rebours est arrivé à zéro
         if (countdown === 0 && !score) {
             setTimerExpired(true);
         }
@@ -93,7 +97,52 @@ const FaqPart = () => {
             console.error("Erreur lors de l'enregistrement de la réponse :", error);
         }
     };
+
+    const createCertificate = async () => {
+        const userid = await idUser();
+        const formattedScore = parseFloat(score.scorePercentage.toFixed(2));
+        try {
+            await axios.post('http://localhost:8800/api/certaficat/createCertificate', {
+                idCours: id, 
+                idUser: userid,
+                note: formattedScore 
+            });
+            setCertificateAvailable(true); 
+        } catch (error) {
+            console.error("Erreur lors de la création du certificat :", error);
+        }
+    };
+
+    const exportCertificate = async () => {
+        const userid = await idUser();
+        try {
+            const response = await axios.get(`http://localhost:8800/api/certaficat/getCertificateByIds/${id}/${userid}`);
+            const certificateData = response.data;
     
+            const doc = new jsPDF();
+            const marginLeft = 15;
+            const marginTop = 15;
+            const lineHeight = 10;
+    
+            doc.setFontSize(12);
+            doc.text(`ID du certificat: ${certificateData.id}`, marginLeft, marginTop);
+            doc.text(`Titre du cours: ${certificateData.titreCours}`, marginLeft, marginTop + lineHeight);
+            doc.text(`Type du cours: ${certificateData.typeCours}`, marginLeft, marginTop + 2 * lineHeight);
+            doc.text(`ID de l'utilisateur: ${certificateData.idUser}`, marginLeft, marginTop + 3 * lineHeight);
+            doc.text(`Nom de l'utilisateur: ${certificateData.username}`, marginLeft, marginTop + 4 * lineHeight);
+            doc.text(`Note: ${certificateData.note}%`, marginLeft, marginTop + 5 * lineHeight);
+    
+            // Styling the text
+    
+            // Adding a border
+            doc.rect(10, 10, doc.internal.pageSize.getWidth() - 20, doc.internal.pageSize.getHeight() - 20, 'S');
+    
+            // Saving the document
+            doc.save('certificat.pdf');
+        } catch (error) {
+            console.error("Erreur lors de l'export du certificat :", error);
+        }
+    };
 
     return (
         <div className="content">
@@ -112,8 +161,11 @@ const FaqPart = () => {
                             </div>
                             <div style={{display:"flex"}} >
                                 <button onClick={deleteResponses}>Répéter le quiz</button>
-                                <button>Cértefication</button>
-                                
+                                {certificateAvailable ? (
+                                    <button onClick={exportCertificate}>Exporter le certificat</button>
+                                ) : (
+                                    <button onClick={createCertificate}>Créer le certificat</button>
+                                )}
                             </div>
                             
                         </div>
