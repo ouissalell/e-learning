@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import CountUp from 'react-countup';
 import VisibilitySensor from 'react-visibility-sensor';
 import SectionTitle from '../../components/Common/SectionTitle';
@@ -9,14 +10,27 @@ import countIcon2 from '../../assets/img/about/style3/icons/2.png';
 import countIcon3 from '../../assets/img/about/style3/icons/3.png';
 
 const AboutCounter = () => {
-
+    const [userCount, setUserCount] = useState(0);
     const [state, setState] = useState(true);
+
+    useEffect(() => {
+        const fetchUserCount = async () => {
+            try {
+                const response = await axios.get('http://localhost:8800/api/auth/countUsers');
+                setUserCount(response.data.userCount);
+            } catch (error) {
+                console.error("Erreur lors de la récupération du nombre d'utilisateurs :", error);
+            }
+        };
+
+        fetchUserCount();
+    }, []);
 
     const counters = [
         {
-            countNum: 2,
-            countTitle: 'Students',
-            counterPrefix: 'k+',
+            countNum: userCount,
+            countTitle: 'Users',
+            counterPrefix: '',
             countIcon: countIcon1
         },
         {
@@ -31,7 +45,6 @@ const AboutCounter = () => {
             counterPrefix: '%',
             countIcon: countIcon3
         }
-
     ];
 
     return (
@@ -56,7 +69,7 @@ const AboutCounter = () => {
                             <div className="row rs-counter couter-area">
                                 {counters.map((counter, num) => (
                                     <div key={num} className="col-md-4 sm-mb-30">
-                                        <div className="counter-item one">
+                                        <div className={`counter-item ${['one', 'two', 'three'][num]}`}>
                                             <img className="count-img" src={counter.countIcon} alt="" />
                                             <h2 className="number rs-count">
                                                 <CountUp start={state ? 0 : counter.countNum} end={counter.countNum} duration={10} onEnd={() => setState(false)} />
@@ -70,41 +83,7 @@ const AboutCounter = () => {
                                             <h4 className="title mb-0">{counter.countTitle}</h4>
                                         </div>
                                     </div>
-                                )).slice(0, 1)}
-                                {counters.map((counter, num) => (
-                                    <div key={num} className="col-md-4 sm-mb-30">
-                                        <div className="counter-item two">
-                                            <img className="count-img" src={counter.countIcon} alt="" />
-                                            <h2 className="number rs-count">3.
-                                                <CountUp start={state ? 0 : counter.countNum} end={counter.countNum} duration={10} onEnd={() => setState(false)} />
-                                                {({ countUpRef, start }) => (
-                                                    <VisibilitySensor onChange={start} delayedCall>
-                                                        <span ref={countUpRef} />
-                                                    </VisibilitySensor>
-                                                )}
-                                                <span className="counter-prefix">{counter.counterPrefix}</span>
-                                            </h2>
-                                            <h4 className="title mb-0">{counter.countTitle}</h4>
-                                        </div>
-                                    </div>
-                                )).slice(1, 2)}
-                                {counters.map((counter, num) => (
-                                    <div key={num} className="col-md-4">
-                                        <div className="counter-item three">
-                                            <img className="count-img" src={counter.countIcon} alt="" />
-                                            <h2 className="number rs-count">
-                                                <CountUp start={state ? 0 : counter.countNum} end={counter.countNum} duration={10} onEnd={() => setState(false)} />
-                                                {({ countUpRef, start }) => (
-                                                    <VisibilitySensor onChange={start} delayedCall>
-                                                        <span ref={countUpRef} />
-                                                    </VisibilitySensor>
-                                                )}
-                                                <span className="counter-prefix">{counter.counterPrefix}</span>
-                                            </h2>
-                                            <h4 className="title mb-0">{counter.countTitle}</h4>
-                                        </div>
-                                    </div>
-                                )).slice(2, 3)}
+                                ))}
                             </div>
                         }
                     </div>

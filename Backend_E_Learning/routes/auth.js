@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, logout,checkUserRole,checkUserRoleA } from "../controllers/auth.js";
+import { register, login, logout,checkUserRole,checkUserRoleA,countUsers,getLatestTeachers } from "../controllers/auth.js";
 
 
 const router = express.Router();
@@ -9,6 +9,8 @@ router.post("/login", login);
 router.post("/logout", logout);
 router.get("/checkUserRole/:id", checkUserRole);
 router.get("/checkUserRoleA/:id", checkUserRoleA);
+router.get("/countUsers", countUsers);
+router.get("/latestTeachers", getLatestTeachers);
 
 
 
