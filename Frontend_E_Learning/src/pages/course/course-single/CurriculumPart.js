@@ -20,10 +20,12 @@ const CurriculumPart = () => {
     const [course, setCourse] = useState([]);
     const [chapitre, setChapitre] = useState([]);
     const [quiz,setQuiz]=useState([]);
+    
 
     const [a,setA] =useState(false);
 
     const [openIndex, setOpenIndex] = useState(null); // État pour suivre l'index de l'activité ouverte
+    const [openIndexc, setOpenIndexc] = useState(null);
 
     const toggleActivite = (index) => {
         setOpenIndex(openIndex === index ? null : index); // Ouvre ou ferme l'activité en fonction de son index
@@ -33,8 +35,10 @@ const CurriculumPart = () => {
         fetchQuiz();
         fetchCourse();
         getChapitreAndActivite();
-       
+        
     }, [id]);
+
+    
    
 
     const fetchCourse = async () => {
@@ -66,17 +70,46 @@ const CurriculumPart = () => {
     };
 
     const toggleChapitre = (index) => {
-        setOpenIndex(openIndex === index ? null : index); 
+        
+        setOpenIndexc(openIndexc === index ? null : index); 
+        
     };
+    const submitavc = async (nChapN)=>{
+        
+        console.log(nChapN)
+        const userid = await idUser();
+        let nch =nChapN;
+        if(nChapN===0){
+            nch =nChapN.toString();
+        }
+        console.log(nch)
+        try {
+            await axios.post("http://localhost:8800/api/avc/createOrUpdateAvc", {
+                idCours : id,
+                iduser:userid,
+                chapN: nch
+            });
+                }
+                
+                catch (err) {
+                
+                    console.error('Une erreur inattendue s\'est produite lors de la création de l\'événement.');
+            
+            }
+    }
+    const ac =(index)=>{
+        toggleChapitre(index);
+        submitavc(index);
+    }
     return (
         <div className="content">
             {chapitre && chapitre.map((chapitre, index) => (
             <Accordion key={chapitre.id_chapitre}
-            preExpanded={openIndex === index ? [chapitre.id_chapitre.toString()] : []}  className="accordion-box" >
+            preExpanded={openIndexc === index ? [chapitre.id_chapitre.toString()] : []}  className="accordion-box" >
                 <AccordionItem className="accordion-item" uuid={chapitre.id_chapitre}>
                     <AccordionItemHeading >
-                        <AccordionItemButton onClick={() => toggleChapitre(index)} >
-                            <button>{chapitre.nom_chapitre}</button>
+                        <AccordionItemButton onClick={() => {ac(index)}}>
+                            <button onClick={() => {ac(index)}}>{chapitre.nom_chapitre}</button>
                         </AccordionItemButton>
                     </AccordionItemHeading>
                     <AccordionItemPanel className="card-body acc-content current">

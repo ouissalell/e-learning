@@ -7,7 +7,7 @@ const SinglePost = (props) => {
         <div className={blogClass ? blogClass : 'blog-item mb-44'}>
             <div className="image-part">
                 <Link to="/blog/single-post-right-sidebar">
-                    <img
+                    <img style={{width:"346px",height:"245px"}}
                         src={blogImage}
                         alt={blogTitle}
                     />

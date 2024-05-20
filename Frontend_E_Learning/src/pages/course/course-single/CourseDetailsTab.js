@@ -1,5 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Link,useParams } from 'react-router-dom';
+import { useAuth } from '../../../context/authContext'; 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import FaqPart from './FaqPart';
@@ -9,12 +11,32 @@ import InstructorPart from './InstructorPart';
 import CurriculumPart from './CurriculumPart';
 
 const CourseDetailsTab = () => {
+    const { id } = useParams();
+    const [complete,setComplete]=useState(0)
+    const { idUser } = useAuth();
+    const {i,seti}=useState(0);
+    useEffect(() => {
+        
+        fetchDataC();
+    }, []);
+
+        const fetchDataC = async () => {
+            const userid = await idUser();
+            try {
+                const response = await axios.get(`http://localhost:8800/api/avc/avc/${id}/${userid}`);
+                setComplete(response.data.avc);
+
+            } catch (error) {
+                console.error('Error fetching AVC data:', error);
+            }
+            
+        };
 
     let tab1 = "Overview",
         tab2 = "Curriculum",
-        tab3 = "Quiz",
-        tab4 = "Instructor",
-        tab5 = "Reviews"
+        tab3 = "Instructor",
+        tab4 = "Quiz",
+        tab5 = "Quiz"
     const tabStyle = 'intro-tabs tabs-box';
 
     return (
@@ -30,12 +52,18 @@ const CourseDetailsTab = () => {
                     <Tab>
                         <button>{tab3}</button>
                     </Tab>
-                    <Tab>
-                        <button>{tab4}</button>
-                    </Tab>
-                    <Tab>
-                        <button>{tab5}</button>
-                    </Tab>
+                    {complete && complete >= 80 ?
+                     <Tab>
+                     <button>{tab4}</button>
+                 </Tab>
+                 :
+                 <Tab>
+                 <button>{tab4}<img style={{marginLeft:"15px"}} width="18" height="18" src="https://img.icons8.com/ios-glyphs/30/1A1A1A/lock--v1.png" alt="lock--v1"/></button>
+             </Tab>
+                }
+                   
+                    
+                     
                 </TabList>
 
                 <TabPanel>
@@ -43,20 +71,25 @@ const CourseDetailsTab = () => {
                 </TabPanel>
 
                 <TabPanel>
-                    <CurriculumPart />
+                    <CurriculumPart i={i} />
                 </TabPanel>
-                
-                <TabPanel>
-                    <FaqPart />
-                </TabPanel>
-
                 <TabPanel>
                     <InstructorPart />
                 </TabPanel>
 
-                <TabPanel>
+                {complete && complete >= 80 ?
+                     <TabPanel>
+                     <FaqPart />
+                 </TabPanel>
+                 :
+                 <TabPanel>
                     <ReviewPart />
                 </TabPanel>
+                }
+
+                
+
+                
             </Tabs>
             {/* <ul className="nav nav-tabs intro-tabs tabs-box" id="myTab" role="tablist">
                 <li className="nav-item tab-btns">

@@ -6,13 +6,16 @@ const OverviewPart = () => {
     const { id } = useParams();
     const [course, setCourse] = useState([]);
     const [chapitre, setChapitre] = useState([]);
+    const [edu, setEdu] = useState();
 
     useEffect(() => {
+        fetchEdu();
         fetchCourse();
     }, [id]);
 
     const fetchCourse = async () => {
         try {
+
             const response = await axios.get(`http://localhost:8800/api/cours/getCourse/${id}`);
             setCourse(response.data[0]);
             const responsec = await axios.get(`http://localhost:8800/api/chapitre/getChapitre/${id}`);
@@ -22,7 +25,14 @@ const OverviewPart = () => {
             console.error("Erreur lors de la récupération des événements :", error);
         }
     };
-
+const fetchEdu = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8800/api/lecture/getLectureCours/${id}`);
+            setEdu(response.data);
+        } catch (error) {
+            console.error("Erreur lors de la récupération des événements :", error);
+        }
+    };
     return (
         <div className="content white-bg pt-30">
             <div className="course-overview">
@@ -41,9 +51,9 @@ const OverviewPart = () => {
                     <h4>{course && course.titre}</h4>
                     <p>{course && course.description}</p>
                     <ul className="student-list">
-                        <li>23,564 Total Students</li>
-                        <li><span className="theme_color">4.5</span> <span className="fa fa-star"></span><span className="fa fa-star"></span><span className="fa fa-star"></span><span className="fa fa-star"></span><span className="fa fa-star"></span> (1254 Rating)</li>
-                        <li>256 Reviews</li>
+                        <li>{edu && edu} Total Students</li>
+                        {/* <li><span className="theme_color">4.5</span> <span className="fa fa-star"></span><span className="fa fa-star"></span><span className="fa fa-star"></span><span className="fa fa-star"></span><span className="fa fa-star"></span> (1254 Rating)</li>
+                        <li>256 Reviews</li> */}
                     </ul>
                     <h3>What you’ll learn?</h3>
                     <ul className="review-list">

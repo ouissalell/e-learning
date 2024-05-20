@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import '../../../assets/scss/modal.scss';
 import { useAuth } from '../../../context/authContext';
+import '../../../assets/scss/modal.scss';
 
 const FaqPart = () => {
     const { idUser } = useAuth();
@@ -10,40 +10,48 @@ const FaqPart = () => {
     const [quiz, setQuiz] = useState([]);
     const [numberQ, setNumberQ] = useState(1);
     const [question, setQuestion] = useState({});
-    const [countdown, setCountdown] = useState(30); // 30 minutes en secondes
+    const [countdown, setCountdown] = useState(30 * 60); // 30 minutes en secondes
     const [timerExpired, setTimerExpired] = useState(false);
     const [selectedResponse, setSelectedResponse] = useState("?");
-    const [res, setRes] = useState(0);
     const [score, setScore] = useState(null);
+    const [idQuiz, setIdQuiz] = useState(null);
 
     const fetchQuiz = async () => {
-        console.log(question)
         const userid = await idUser();
         try {
             const response = await axios.get(`http://localhost:8800/api/quiz/getQuiz/${id}`);
             setQuiz(response.data);
+            setIdQuiz(response.data[0].id);
             const idq = response.data[0].id;
             try {
                 const response = await axios.get(`http://localhost:8800/api/repense/fetchFirstFalseResponseQuestion/${idq}/${userid}`);
                 if (response.data !== 0) {
                     setQuestion(response.data);
-                    console.log(question)
+                    console.log(response.data)
                 } else {
                     try {
                         const response = await axios.get(`http://localhost:8800/api/repense/getQuizScore/${idq}/${userid}`);
-                        setQuestion(null)
                         setScore(response.data);
-                        console.log(question)
                     } catch (error) {
                         console.error("Erreur lors de la récupération du score du quiz :", error);
                     }
                 }
-                console.log(question)
             } catch (error) {
                 console.error("Erreur lors de la récupération des questions du quiz :", error);
             }
         } catch (error) {
             console.error("Erreur lors de la récupération du quiz :", error);
+        }
+    };
+
+    const deleteResponses = async () => {
+        const userid = await idUser();
+        try {
+            await axios.delete(`http://localhost:8800/api/repense/deleteResponsesByQuizAndUser/${idQuiz}/${userid}`);
+            setScore(null);
+            fetchQuiz();
+        } catch (error) {
+            console.error("Erreur lors de la suppression des réponses :", error);
         }
     };
 
@@ -62,7 +70,7 @@ const FaqPart = () => {
         if (countdown === 0 && !score) {
             setTimerExpired(true);
         }
-    }, [countdown, id]);
+    }, [countdown]);
 
     const handleResponseClick = (response) => {
         setSelectedResponse(response);
@@ -80,20 +88,20 @@ const FaqPart = () => {
             });
             fetchQuiz();
             setNumberQ(numberQ + 1);
-            setSelectedResponse("?")
+            setSelectedResponse("?");
         } catch (error) {
             console.error("Erreur lors de l'enregistrement de la réponse :", error);
         }
     };
+    
 
     return (
         <div className="content">
             {timerExpired && question && Object.keys(question).length !== 0 ? (
                 <div>
                     <p>Temps écoulé!</p>
-                    
                 </div>
-            ): score ? (
+            ) : score ? (
                 <div className='fl'>
                     {score.scorePercentage > 70 ? (
                         <div className='btn-cer'>
@@ -102,7 +110,12 @@ const FaqPart = () => {
                                 <h4>Correct Responses : {score.correctResponses}</h4>
                                 <p>Félicitations! Vous avez réussi le quiz avec un score supérieur à 70%.</p>
                             </div>
-                            <button>Cértefication</button>
+                            <div style={{display:"flex"}} >
+                                <button onClick={deleteResponses}>Répéter le quiz</button>
+                                <button>Cértefication</button>
+                                
+                            </div>
+                            
                         </div>
                     ) : (
                         <div className='btn-rq'>
@@ -111,7 +124,7 @@ const FaqPart = () => {
                                 <h4>Correct Responses : <span>{score.correctResponses}</span></h4>
                                 <p>Désolé, vous n'avez pas réussi le quiz. Essayez à nouveau!</p>
                             </div>
-                            <button>répeter le quiz</button>
+                            <button onClick={deleteResponses}>Répéter le quiz</button>
                         </div>
                     )}
                 </div>

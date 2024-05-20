@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Slider from "react-slick";
 import SinglePost from './SinglePost';
 
-import blogImg1 from '../../assets/img/blog/style2/1.jpg';
-import blogImg2 from '../../assets/img/blog/style2/2.jpg';
-import blogImg3 from '../../assets/img/blog/style2/3.jpg';
-import blogImg4 from '../../assets/img/blog/style2/4.jpg';
-
 const BlogPart = () => {
+    const [events, setEvents] = useState([]);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            
+            try {
+                const response = await axios.get('http://localhost:8800/api/event/getLatestEvents');
+                setEvents(response.data);
+            } catch (error) {
+                console.error("Erreur lors de la récupération des événements :", error);
+            }
+        };
+
+        fetchEvents();
+    }, []);
 
     const blogSettings = {
         dots: false,
@@ -22,7 +33,7 @@ const BlogPart = () => {
                 settings: {
                     slidesToShow: 2,
                 }
-            },            
+            },
             {
                 breakpoint: 767,
                 settings: {
@@ -35,42 +46,21 @@ const BlogPart = () => {
     return (
         <React.Fragment>
             <Slider {...blogSettings}>
-                <SinglePost 
-                    blogClass = 'blog-item'
-                    blogImage = {blogImg1}
-                    blogCategory= 'University'
-                    blogTitle = 'Majority of students dissatisfied for world coronavirus support'
-                    blogDesc = 'We denounce with righteous indige nation and dislike men who are so beguiled...'
-                    blogPublishedDate = '20 December 2020'
-                />
-                <SinglePost 
-                    blogClass = 'blog-item'
-                    blogImage = {blogImg2}
-                    blogCategory= 'School'
-                    blogTitle = 'University class starting soon while the lovely valley team'
-                    blogDesc = 'We denounce with righteous indige nation and dislike men who are so beguiled...'
-                    blogPublishedDate = '22 December 2020'
-                />
-                <SinglePost 
-                    blogClass = 'blog-item'
-                    blogImage = {blogImg3}
-                    blogCategory= 'Primary'
-                    blogTitle = 'How universities can nurture for the world climate crisis'
-                    blogDesc = 'We denounce with righteous indige nation and dislike men who are so beguiled...'
-                    blogPublishedDate = '26 December 2020'
-                />
-                <SinglePost 
-                    blogClass = 'blog-item'
-                    blogImage = {blogImg4}
-                    blogCategory= 'College'
-                    blogTitle = 'Oxford vaccine trial resumes in UK after being halted'
-                    blogDesc = 'We denounce with righteous indige nation and dislike men who are so beguiled...'
-                    blogPublishedDate = '28 December 2020'
-                />
+                {events.map(event => (
+                    <SinglePost
+                        key={event.id}
+                        blogClass='blog-item'
+                        blogImage={`http://localhost:8800/api/image/${event.image}`} // Utiliser une image par défaut si aucune image n'est disponible
+                        blogCategory={event.categorie}
+                        blogTitle={event.titre}
+                        blogDesc={event.description.substring(0, 100) + '...'} // Limiter la description à 100 caractères
+                        blogPublishedDate={new Date(event.datedebut).toLocaleDateString()}
+                        blogAuthor={event.role}
+                    />
+                ))}
             </Slider>
         </React.Fragment>
     );
-
 }
 
 export default BlogPart;

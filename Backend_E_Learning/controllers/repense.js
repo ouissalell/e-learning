@@ -114,3 +114,40 @@ const calculateQuizScore = (idQuiz, idUser) => {
         });
     });
 };
+
+
+export const deleteResponsesByQuizAndUser = (req, res) => {
+    const { idQuiz, idUser } = req.params;
+
+    // Vérifier si les identifiants de quiz et d'utilisateur sont fournis
+    if (!idQuiz || !idUser) {
+        return res.status(400).json("Les identifiants de quiz et d'utilisateur sont requis.");
+    }
+
+    // Récupérer toutes les questions associées à l'identifiant de quiz fourni
+    const selectQuestionsQuery = "SELECT id FROM question WHERE id_quiz = ?";
+    db.query(selectQuestionsQuery, [idQuiz], (err, questions) => {
+        if (err) {
+            console.error("Erreur lors de la récupération des questions du quiz :", err);
+            return res.status(500).json("Une erreur s'est produite lors de la récupération des questions du quiz.");
+        }
+
+        // Si aucune question n'est associée à l'identifiant de quiz, retourner un message
+        if (questions.length === 0) {
+            return res.status(404).json("Aucune question n'est associée à l'identifiant de quiz fourni.");
+        }
+
+        // Créer un tableau d'identifiants de questions à partir des résultats de la requête
+        const questionIds = questions.map(question => question.id);
+
+        // Supprimer toutes les réponses de l'utilisateur associées à ces questions
+        const deleteResponsesQuery = "DELETE FROM reponse WHERE idquestion IN (?) AND idUser = ?";
+        db.query(deleteResponsesQuery, [questionIds, idUser], (err, result) => {
+            if (err) {
+                console.error("Erreur lors de la suppression des réponses :", err);
+                return res.status(500).json("Une erreur s'est produite lors de la suppression des réponses.");
+            }
+            return res.status(200).json("Toutes les réponses pour le quiz ont été supprimées avec succès.");
+        });
+    });
+};

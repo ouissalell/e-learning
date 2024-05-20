@@ -1,11 +1,12 @@
 import express from "express";
-import { createLecture,getLectureCours } from "../controllers/lecture.js";
+import { createLecture,getLectureCours,getTop6CoursesByLecture } from "../controllers/lecture.js";
 
 
 const router = express.Router();
 
 router.post("/createLecture", createLecture);
 router.get("/getLectureCours/:id", getLectureCours);
+router.get("/getTop6CoursesByLecture", getTop6CoursesByLecture);
 
 
 

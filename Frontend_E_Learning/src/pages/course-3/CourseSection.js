@@ -10,11 +10,33 @@ import image3 from '../../assets/img/courses/6.jpg';
 import image4 from '../../assets/img/courses/7.jpg';
 import image5 from '../../assets/img/courses/8.jpg';
 import image6 from '../../assets/img/courses/9.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const Courses = () => {
     const { idUser } = useAuth();
+    const navigate = useNavigate();
 
     const [courses, setCourses] = useState([]);
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const userId = await idUser(); // Récupérer l'ID de l'utilisateur à partir du contexte d'authentification
+                const response = await axios.get(`http://localhost:8800/api/auth/checkUserRole/${userId}`);
+                const userRole = response.data.role;
+
+                // Vérifier le rôle de l'utilisateur et agir en conséquence
+                if (userRole !== 'enseignant') {
+                    // Rediriger l'utilisateur non administrateur vers une autre page ou afficher un message d'erreur
+                    navigate('/404'); // Exemple de redirection vers la page d'accueil
+                }
+            } catch (error) {
+                console.error("Erreur lors de la récupération du rôle de l'utilisateur :", error);
+                // Afficher un message d'erreur ou rediriger vers une autre page en cas d'erreur
+            }
+        };
+
+        fetchUserData(); // Appel de la fonction pour récupérer et vérifier le rôle de l'utilisateur
+    }, [idUser, navigate]);
 
     useEffect(() => {
         fetchCourses();

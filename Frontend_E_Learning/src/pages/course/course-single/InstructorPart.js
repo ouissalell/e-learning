@@ -1,21 +1,22 @@
 import React, { useContext,useEffect,useState } from 'react';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { Link,useParams } from 'react-router-dom';
 import { useAuth } from '../../../context/authContext'; 
-
 // Image
 import teamImg1 from '../../../assets/img/team/1.jpg';
 import teamImg2 from '../../../assets/img/team/2.jpg';
 
 const InstructorPart = () => {
     const [nam,setName]=useState("");
-    const { name } = useAuth();
+    const { id } = useParams();
     const fetchName = async () => {
         try {
-          const userName = await name(); 
-          console.log("name de l'utilisateur:", userName);
-          setName(userName);
+            const response = await axios.get(`http://localhost:8800/api/cours/getUserNameByCourseId/${id}`);
+            setName(response.data);
+            
+            
         } catch (error) {
-          console.error("Erreur lors de la récupération du rôle:", error);
+            console.error("Erreur lors de la récupération des nom :", error);
         }
       };
       useEffect(() => {

@@ -107,49 +107,7 @@ const HeaderStyleFour = (props) => {
 										</div>
 										<div className="expand-btn-inner relative">
 											<ul className="expand-items">
-												<li className="user-icon icon-bar cart-inner mini-cart-active">
-													<Link to="#" className="cart-icon"><i className="fa fa-shopping-bag"></i></Link>
-													<div className="woocommerce-mini-cart text-left">
-														<div className="cart-bottom-part">
-															<ul className="cart-icon-product-list">
-																<li className="display-flex">
-																	<div className="icon-cart">
-																		<Link to="#"><i className="fa fa-times"></i></Link>
-																	</div>
-																	<div className="product-info">
-																		<Link to="/shop/cart">Law Book</Link><br />
-																		<span className="quantity">1 × $30.00</span>
-																	</div>
-																	<div className="product-image">
-																		<Link to="/shop/cart"><img src={productImg1} alt="Product Image" /></Link>
-																	</div>
-																</li>
-																<li className="display-flex">
-																	<div className="icon-cart">
-																		<Link to="#"><i className="fa fa-times"></i></Link>
-																	</div>
-																	<div className="product-info">
-																		<Link to="/shop/cart">Spirit Level</Link><br />
-																		<span className="quantity">1 × $30.00</span>
-																	</div>
-																	<div className="product-image">
-																		<Link to="/shop/cart"><img src={productImg2} alt="Product Image" /></Link>
-																	</div>
-																</li>
-															</ul>
-
-															<div className="total-price text-center">
-																<span className="subtotal">Subtotal:</span>
-																<span className="current-price">$85.00</span>
-															</div>
-
-															<div className="cart-btn text-center">
-																<Link className="crt-btn btn1" to="/shop/cart">View Cart</Link>
-																<Link className="crt-btn btn2" to="/shop/checkout">Check Out</Link>
-															</div>
-														</div>
-													</div>
-												</li>
+												
 												<li className="sidebarmenu-search">
 													<a onClick={searchModalAdd} className="rs-search" href="#">
 														<i className="flaticon-search"></i>
