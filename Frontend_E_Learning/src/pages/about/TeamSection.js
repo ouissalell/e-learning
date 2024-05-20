@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import SingleTeam from '../../components/Team/SingleTeam';
 import SectionTitle from '../../components/Common/SectionTitle';
 
-// Team Members
 import teamimg1 from '../../assets/img/team/1.jpg';
 import teamimg2 from '../../assets/img/team/2.jpg';
 import teamimg3 from '../../assets/img/team/3.jpg';
@@ -11,6 +11,24 @@ import teamimg5 from '../../assets/img/team/5.jpg';
 import teamimg6 from '../../assets/img/team/6.jpg';
 
 const Team = () => {
+    const [teachers, setTeachers] = useState([]);
+
+    useEffect(() => {
+        const fetchLatestTeachers = async () => {
+            try {
+                const response = await axios.get('http://localhost:8800/api/auth/latestTeachers');
+                setTeachers(response.data);
+            } catch (error) {
+                console.error("Erreur lors de la récupération des derniers enseignants :", error);
+            }
+        };
+
+        fetchLatestTeachers();
+    }, []);
+
+
+    const teamImages = [teamimg1, teamimg2, teamimg3, teamimg4, teamimg5, teamimg6];
+
 
     return (
         <React.Fragment>
@@ -24,54 +42,16 @@ const Team = () => {
                         title="Expert IT Consultants"
                     />
                     <div className="row">
-                        <div className="col-lg-4 col-md-6 mb-30">
+                    {teachers.map((teacher, index) => (
+                        <div key={index} className="col-lg-4 col-md-6 mb-30">
                             <SingleTeam
                                 itemClass="team-item"
-                                Image={teamimg1}
-                                Title="Makhaia Antitni"
-                                Designation="President & CEO"
+                                Image={teamImages[index]}
+                                Title={teacher.username}
+                                Designation={teacher.role}
                             />
                         </div>
-                        <div className="col-lg-4 col-md-6 mb-30">
-                            <SingleTeam
-                                teamClass="team-item"
-                                Image={teamimg2}
-                                Title="Corey Anderson"
-                                Designation="CEO & Founder"
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6 mb-30">
-                            <SingleTeam
-                                teamClass="team-item"
-                                Image={teamimg3}
-                                Title="Masud Rana"
-                                Designation="Web Developer"
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6 md-mb-30">
-                            <SingleTeam
-                                teamClass="team-item"
-                                Image={teamimg4}
-                                Title="Najmul Huda"
-                                Designation="Digital Marketer"
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6 sm-mb-30">
-                            <SingleTeam
-                                teamClass="team-item"
-                                Image={teamimg5}
-                                Title="Rushali Rumi"
-                                Designation="Design Lead"
-                            />
-                        </div>
-                        <div className="col-lg-4 col-md-6">
-                            <SingleTeam
-                                teamClass="team-item"
-                                Image={teamimg6}
-                                Title="Abu Sayed"
-                                Designation="App Developer"
-                            />
-                        </div>
+                         ))}
                     </div>
                 </div>
             </div>
