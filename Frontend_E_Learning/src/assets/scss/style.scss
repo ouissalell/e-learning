@@ -1,0 +1,80 @@
+.container {
+    .contact-widget {
+        padding: 60px;
+        margin-top: 50px;
+        
+        
+            
+            &:active,
+            &:focus {
+                outline: none;
+            }
+            .form-control {
+                padding: 10px 18px;
+                border-radius: 3px;
+                border: 1px solid #F1F1F1;
+                box-shadow: 0 0 30px #eee;
+                color: #767676;
+                background-color: #F1F1F1;
+                width: 100%;
+                max-width: 100%;
+                outline: none;
+
+            textarea {
+                height: 140px;
+                width: 100%;
+                outline: none;
+                padding: 10px;
+                border-radius: 3px;
+                border: 1px solid #F1F1F1;
+                box-shadow: 0 0 30px #eee;
+                color: #767676;
+                background-color: #F1F1F1;
+                resize: vertical;
+
+                &:active,
+                &:focus {
+                    outline: none;
+                    border-color: #ff4d4d;
+                }
+            }
+
+            .error {
+                color: #ff4d4d;
+                font-size: 14px;
+                margin-top: 10px;
+            }
+
+            .success {
+                color: #4caf50;
+                font-size: 14px;
+                margin-top: 10px;
+            }
+
+            button {
+                box-shadow: 0px 28px 50px 0px rgba(0, 0, 0, 0.05);
+                outline: none;
+                border: none;
+                padding: 12px 40px;
+                border-radius: 3px;
+                display: inline-block;
+                font-size: 16px;
+                font-weight: 500;
+                color: #ffff;
+                background: #ff5421 ;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+                width: 100%;
+                text-transform: uppercase;
+                margin-top: 15px;
+
+                &:hover {
+                    opacity: 0.90;
+                }
+            }
+        }
+    }
+}
+
+

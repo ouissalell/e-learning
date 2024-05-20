@@ -14,6 +14,7 @@ const CourseSidebar = () => {
     const [complete,setComplete]=useState(0)
     const { idUser } = useAuth();
     useEffect(() => {
+        
         fetchCourses();
         fetchEdu();
         fetchDataC();

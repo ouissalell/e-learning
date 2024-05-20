@@ -13,7 +13,7 @@ const SingleTestimonialThree = (props) => {
                             alt={Title}
                         />
                         <h4 className="name">{Title ? Title : 'Saiko Najran'}</h4>
-                        <span className="designation">{Designation ? Designation : 'Student'}</span>
+                        <span className="designation">{Designation ==="user" ? 'Student' :Designation }</span>
                         <ul className="ratings">
                             <li><i className="fa fa-star"></i></li>
                             <li><i className="fa fa-star"></i></li>

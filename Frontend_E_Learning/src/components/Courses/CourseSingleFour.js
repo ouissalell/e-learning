@@ -1,9 +1,14 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/authContext'; 
 
 const CourseSingleFour = (props) => {
     const { btnLink, courseClass, courseCategory, courseImg, catLink, courseTitle, coursePrice, studentQuantity, userRating, btnText, metaIcon } = props;
+    const { idUser } = useAuth();
+   
 
+    
     return (
         <div style={{height: "480px"}} className={courseClass ? courseClass : 'courses-item'}>
             <div className="img-part">
@@ -39,7 +44,7 @@ const CourseSingleFour = (props) => {
                         </ul>
                     </div>
                     <div className="btn-part">
-                        <Link to={btnLink ? `/admin/createchapitre/${btnLink}` : '#'}>{btnText ? btnText : 'Apply Now'} <i className="flaticon-next"></i></Link>
+                        <Link to={btnLink && idUser ? `/admin/createchapitre/${btnLink}` : '#'}>{btnText ? btnText : 'Apply Now'} <i className="flaticon-next"></i></Link>
                     </div>
                 </div>
             </div>

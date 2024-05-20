@@ -9,6 +9,7 @@ import ReviewPart from './ReviewPart';
 import OverviewPart from './OverviewPart';
 import InstructorPart from './InstructorPart';
 import CurriculumPart from './CurriculumPart';
+import QR from './QR';
 
 const CourseDetailsTab = () => {
     const { id } = useParams();
@@ -36,7 +37,8 @@ const CourseDetailsTab = () => {
         tab2 = "Curriculum",
         tab3 = "Instructor",
         tab4 = "Quiz",
-        tab5 = "Quiz"
+        tab5 = "Quiz",
+        tab6 = "Q&R"
     const tabStyle = 'intro-tabs tabs-box';
 
     return (
@@ -61,6 +63,9 @@ const CourseDetailsTab = () => {
                  <button>{tab4}<img style={{marginLeft:"15px"}} width="18" height="18" src="https://img.icons8.com/ios-glyphs/30/1A1A1A/lock--v1.png" alt="lock--v1"/></button>
              </Tab>
                 }
+                <Tab>
+                        <button>{tab6}</button>
+                    </Tab>
                    
                     
                      
@@ -86,7 +91,9 @@ const CourseDetailsTab = () => {
                     <ReviewPart />
                 </TabPanel>
                 }
-
+                <TabPanel>
+                    <QR />
+                </TabPanel>
                 
 
                 
