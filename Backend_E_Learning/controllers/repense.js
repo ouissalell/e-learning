@@ -147,7 +147,16 @@ export const deleteResponsesByQuizAndUser = (req, res) => {
                 console.error("Erreur lors de la suppression des réponses :", err);
                 return res.status(500).json("Une erreur s'est produite lors de la suppression des réponses.");
             }
-            return res.status(200).json("Toutes les réponses pour le quiz ont été supprimées avec succès.");
+            // Supprimer le certificat associé à l'ID du cours, de l'utilisateur et du quiz
+        const deleteCertificateQuery = "DELETE FROM Certificat WHERE idCours = (SELECT idCours FROM quiz WHERE id = ?) AND idUser = ? AND idQuiz = ?";
+        db.query(deleteCertificateQuery, [idQuiz, idUser], (err, result) => {
+            if (err) {
+                console.error("Erreur lors de la suppression du certificat :", err);
+                return res.status(500).json("Une erreur s'est produite lors de la suppression du certificat.");
+            }
+           
+        })
+        return res.status(200).json("Toutes les réponses pour le quiz ont été supprimées avec succès.");
         });
     });
 };
