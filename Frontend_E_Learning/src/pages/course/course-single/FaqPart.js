@@ -11,7 +11,7 @@ const FaqPart = () => {
     const [quiz, setQuiz] = useState([]);
     const [numberQ, setNumberQ] = useState(1);
     const [question, setQuestion] = useState({});
-    const [countdown, setCountdown] = useState(30 * 60);
+    const [countdown, setCountdown] = useState(null);
     const [timerExpired, setTimerExpired] = useState(false);
     const [selectedResponse, setSelectedResponse] = useState("?");
     const [score, setScore] = useState(null);
@@ -23,6 +23,10 @@ const FaqPart = () => {
         try {
             const response = await axios.get(`http://localhost:8800/api/quiz/getQuiz/${id}`);
             setQuiz(response.data);
+            if(!countdown){
+                setCountdown(response.data[0].duree)
+                
+            }
             setIdQuiz(response.data[0].id);
             const idq = response.data[0].id;
             try {
@@ -70,9 +74,46 @@ const FaqPart = () => {
         return () => clearInterval(interval);
     }, []);
 
-    useEffect(() => {
-        if (countdown === 0 && !score) {
+    const markAllResponsesAsFalse = async () => {
+        try {
+            const userid = await idUser(); // Utilisez await pour récupérer l'ID de l'utilisateur
+            
+            // Récupérer toutes les questions du quiz
+            const quizResponse = await axios.get(`http://localhost:8800/api/quiz/getQuiz/${id}`);
+            const idq = quizResponse.data[0].id;
+            
+            // Récupérer la première question sans réponse de l'utilisateur
+            const firstFalseResponse = await axios.get(`http://localhost:8800/api/repense/fetchFirstFalseResponseQuestion/${idq}/${userid}`);
+            
+            // Si une question non répondu est retournée, ne pas continuer
+            if (firstFalseResponse.data !== 0) {
+                return;
+            }
+    
+            // Si toutes les questions du quiz ont déjà une réponse, récupérer à nouveau les questions
+            const responseAll = await axios.get(`http://localhost:8800/api/quiz/getQuiz/${id}`);
+            const quizQuestions = responseAll.data;
+    
+            // Mettre à jour chaque réponse de l'utilisateur à chaque question du quiz comme fausse
+            for (const question of quizQuestions) {
+                await axios.post('http://localhost:8800/api/repense/createRepense', {
+                    resultat: "false",
+                    idquestion: question.id,
+                    idUser: userid
+                });
+            }
+            fetchQuiz();
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour des réponses :", error);
+        }
+    };
+    
+    useEffect(  ()  => {
+        
+        if (countdown === 0 ) {
             setTimerExpired(true);
+            // Appeler la fonction pour marquer toutes les réponses comme fausses
+            markAllResponsesAsFalse();
         }
     }, [countdown]);
 
@@ -128,7 +169,6 @@ const FaqPart = () => {
             doc.text(`ID du certificat: ${certificateData.id}`, marginLeft, marginTop);
             doc.text(`Titre du cours: ${certificateData.titreCours}`, marginLeft, marginTop + lineHeight);
             doc.text(`Type du cours: ${certificateData.typeCours}`, marginLeft, marginTop + 2 * lineHeight);
-            doc.text(`ID de l'utilisateur: ${certificateData.idUser}`, marginLeft, marginTop + 3 * lineHeight);
             doc.text(`Nom de l'utilisateur: ${certificateData.username}`, marginLeft, marginTop + 4 * lineHeight);
             doc.text(`Note: ${certificateData.note}%`, marginLeft, marginTop + 5 * lineHeight);
     
